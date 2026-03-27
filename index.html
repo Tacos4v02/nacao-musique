@@ -575,7 +575,10 @@
     .hero-text h1 { font-size: 2.8rem; }
     nav { padding: 0 1rem; }
     .nav-links { gap: 1rem; }
-    .nav-links li:nth-child(n+3) { display: none; }
+    @media (max-width: 768px) {
+    .nav-links { gap: 0.5rem; }
+    .nav-links a { font-size: 0.75rem; letter-spacing: 0px; }
+  }
     .section { padding: 2rem 1rem; }
   }
 
@@ -614,7 +617,6 @@
     <li><a href="#" class="active" onclick="showPage('home');return false;">Accueil</a></li>
     <li><a href="#" onclick="showPage('apprendre');return false;">Apprendre</a></li>
     <li><a href="#" onclick="showPage('bibliotheque');return false;">Bibliothèque</a></li>
-    <li><a href="#" onclick="showPage('sorties');return false;">Sorties</a></li>
   </ul>
 </nav>
 
@@ -869,56 +871,7 @@
 </div>
 
 <!-- PAGE: SORTIES -->
-<div class="page" id="page-sorties">
-  <div class="section">
-    <h2 class="section-title">Sorties récentes</h2>
-    <p class="section-subtitle">Les dernières musiques publiées par Nação Capoeira</p>
-    <div class="releases-list">
-      <div class="release-item">
-        <span class="release-new">Nouveau</span>
-        <div class="release-info">
-          <h4>Zum zum zum capoeira matou um</h4>
-          <p>Version live – Roda de Nação 2025 • Mestre Zumba</p>
-        </div>
-        <span class="genre-tag tag-angola">Angola</span>
-        <span class="release-date">Mars 2025</span>
-      </div>
-      <div class="release-item">
-        <span class="release-new">Nouveau</span>
-        <div class="release-info">
-          <h4>Paranauê</h4>
-          <p>Enregistrement studio • Chœur de Nação Capoeira</p>
-        </div>
-        <span class="genre-tag tag-regional">Regional</span>
-        <span class="release-date">Fév. 2025</span>
-      </div>
-      <div class="release-item">
-        <div class="release-info">
-          <h4>Dona Maria do Camboatá</h4>
-          <p>Ladainha d'ouverture de roda • Mestre Zumba</p>
-        </div>
-        <span class="genre-tag tag-ladainha">Ladainha</span>
-        <span class="release-date">Jan. 2025</span>
-      </div>
-      <div class="release-item">
-        <div class="release-info">
-          <h4>É hora, é hora</h4>
-          <p>Corrido rapide • Groupe Nação Capoeira Paris</p>
-        </div>
-        <span class="genre-tag tag-regional">Regional</span>
-        <span class="release-date">Déc. 2024</span>
-      </div>
-      <div class="release-item">
-        <div class="release-info">
-          <h4>Açai meu bem</h4>
-          <p>Angola tradicional • Mestre Pastinha hommage</p>
-        </div>
-        <span class="genre-tag tag-angola">Angola</span>
-        <span class="release-date">Nov. 2024</span>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 <!-- MODAL VIDÉO -->
 <div class="modal-overlay" id="video-modal" onclick="closeModal('video-modal')">
