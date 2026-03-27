@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nação Capoeira – Música</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #ffffff;
+    --blue: #00028e;
+    --blue-light: #2a5298;
+    --blue-pale: #e8eef8;
+    --yellow: #f0c040;
+    --green: #2d7a3e;
+    --gray: #f5f5f5;
+    --text: #1a1a1a;
+    --text-muted: #666;
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--blue);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .nav-logo img {
+    height: 44px;
+    width: auto;
+  }
+  .nav-logo span {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.6rem;
+    color: var(--white);
+    letter-spacing: 2px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover, .nav-links a.active {
+    color: var(--yellow);
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--blue);
+    padding: 4rem 2rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4rem;
+    min-height: 420px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 40px,
+      rgba(255,255,255,0.02) 40px,
+      rgba(255,255,255,0.02) 41px
+    );
+  }
+  .hero-text {
+    color: var(--white);
+    max-width: 500px;
+    position: relative;
+  }
+  .hero-text h1 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 4rem;
+    line-height: 1;
+    letter-spacing: 3px;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .hero-text h1 span {
+    color: var(--yellow);
+  }
+  .hero-text p {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  .hero-cta {
+    display: inline-flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    background: var(--yellow);
+    color: var(--blue);
+    border: none;
+    padding: 0.75rem 1.75rem;
+    border-radius: 6px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(240,192,64,0.4);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--white);
+    border: 2px solid rgba(255,255,255,0.5);
+    padding: 0.75rem 1.75rem;
+    border-radius: 6px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-outline:hover {
+    border-color: var(--yellow);
+    color: var(--yellow);
+  }
+  .hero-mascot {
+    position: relative;
+    flex-shrink: 0;
+  }
+  .hero-mascot img {
+    width: 280px;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid var(--yellow);
+    display: block;
+  }
+  .mascot-badge {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: var(--yellow);
+    color: var(--blue);
+    font-family: 'Bebas Neue', cursive;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 3rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2.2rem;
+    color: var(--blue);
+    letter-spacing: 2px;
+    margin-bottom: 0.25rem;
+    border-left: 5px solid var(--yellow);
+    padding-left: 1rem;
+  }
+  .section-subtitle {
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    padding-left: 1.25rem;
+  }
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, var(--yellow), transparent);
+    margin: 0 2rem;
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    background: var(--blue-pale);
+    color: var(--blue);
+    border: none;
+    padding: 0.5rem 1.25rem;
+    border-radius: 30px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .tab-btn.active, .tab-btn:hover {
+    background: var(--blue);
+    color: var(--yellow);
+  }
+
+  /* INSTRUMENT CARDS (Apprentissage) */
+  .instruments-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  .instrument-card {
+    background: var(--white);
+    border: 1px solid #e0e0e0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .instrument-card:hover {
+    box-shadow: 0 8px 24px rgba(26,58,107,0.12);
+    transform: translateY(-3px);
+  }
+  .instrument-card-header {
+    background: var(--blue);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .instrument-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--yellow);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  .instrument-card-header h3 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.4rem;
+    color: var(--white);
+    letter-spacing: 1px;
+  }
+  .instrument-card-header p {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.7);
+  }
+  .instrument-card-body {
+    padding: 1.25rem 1.5rem;
+  }
+  .video-list { list-style: none; }
+  .video-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-radius: 6px;
+    padding-left: 6px;
+  }
+  .video-item:last-child { border-bottom: none; }
+  .video-item:hover { background: var(--blue-pale); }
+  .play-btn {
+    width: 36px;
+    height: 36px;
+    background: var(--blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .play-btn svg { margin-left: 3px; }
+  .video-info { flex: 1; }
+  .video-info strong { display: block; font-size: 0.9rem; color: var(--text); }
+  .video-info span { font-size: 0.8rem; color: var(--text-muted); }
+  .video-level {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+  .level-debutant { background: #e8f5e9; color: #2d7a3e; }
+  .level-inter { background: #fff3e0; color: #e65100; }
+  .level-avance { background: #fce4ec; color: #c62828; }
+
+  /* VIDEO MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--white);
+    border-radius: var(--radius);
+    width: 90%;
+    max-width: 680px;
+    overflow: hidden;
+  }
+  .modal-header {
+    background: var(--blue);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .modal-header h3 { color: var(--white); font-family: 'Bebas Neue', cursive; font-size: 1.4rem; letter-spacing: 1px; }
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .modal-body { padding: 1.5rem; }
+  .video-embed {
+    background: var(--blue);
+    border-radius: 8px;
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.9rem;
+  }
+  .video-embed a {
+    color: var(--yellow);
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 1.1rem;
+  }
+  .video-embed a:hover { text-decoration: underline; }
+  .video-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* BIBLIOTHÈQUE */
+  .library-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .search-bar {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.6rem 1rem;
+    border: 1.5px solid #ddd;
+    border-radius: 30px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-bar:focus { border-color: var(--blue); }
+  .genre-filters {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .genre-btn {
+    background: var(--blue-pale);
+    color: var(--blue);
+    border: none;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .genre-btn.active, .genre-btn:hover {
+    background: var(--blue);
+    color: var(--yellow);
+  }
+  .music-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .music-card {
+    background: var(--white);
+    border: 1px solid #e5e5e5;
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: box-shadow 0.2s, transform 0.2s;
+    position: relative;
+  }
+  .music-card:hover {
+    box-shadow: 0 6px 20px rgba(26,58,107,0.1);
+    transform: translateY(-2px);
+  }
+  .music-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .music-card-top h4 { font-size: 1rem; font-weight: 600; color: var(--text); line-height: 1.3; flex: 1; padding-right: 0.5rem; }
+  .fav-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #ccc;
+    transition: color 0.2s;
+    flex-shrink: 0;
+    padding: 0;
+  }
+  .fav-btn.active, .fav-btn:hover { color: #e74c3c; }
+  .genre-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+  .tag-angola { background: #fff3e0; color: #bf5100; }
+  .tag-regional { background: #e3f2fd; color: #0d47a1; }
+  .tag-ladainha { background: #e8f5e9; color: #1b5e20; }
+  .music-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .action-btn {
+    background: var(--blue-pale);
+    color: var(--blue);
+    border: none;
+    padding: 0.4rem 0.85rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .action-btn:hover { background: var(--blue); color: var(--yellow); }
+  .music-meta { font-size: 0.78rem; color: var(--text-muted); }
+
+  /* PAROLES MODAL */
+  .lyrics-box {
+    background: var(--gray);
+    border-radius: 8px;
+    padding: 1.25rem;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: var(--text);
+    white-space: normal;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    font-style: italic;
+  }
+  .audio-player-box {
+    background: var(--blue);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--white);
+    font-size: 0.9rem;
+  }
+  .audio-note { color: rgba(255,255,255,0.6); font-size: 0.82rem; }
+
+  /* SORTIES */
+  .releases-list { display: flex; flex-direction: column; gap: 1rem; }
+  .release-item {
+    background: var(--white);
+    border: 1px solid #e5e5e5;
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    transition: box-shadow 0.2s;
+  }
+  .release-item:hover { box-shadow: 0 4px 16px rgba(26,58,107,0.08); }
+  .release-new {
+    background: var(--yellow);
+    color: var(--blue);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    flex-shrink: 0;
+  }
+  .release-info { flex: 1; }
+  .release-info h4 { font-size: 1rem; font-weight: 600; margin-bottom: 2px; }
+  .release-info p { font-size: 0.82rem; color: var(--text-muted); }
+  .release-date { font-size: 0.8rem; color: var(--text-muted); flex-shrink: 0; }
+  .release-genre { font-size: 0.72rem; font-weight: 600; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; }
+
+  /* EMPTY / FILTER STATES */
+  .no-results {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--blue);
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.85rem;
+    margin-top: 3rem;
+  }
+  footer strong { color: var(--yellow); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero { flex-direction: column; text-align: center; padding: 2rem 1.5rem; gap: 2rem; }
+    .hero-mascot img { width: 200px; height: 200px; }
+    .hero-text h1 { font-size: 2.8rem; }
+    nav { padding: 0 1rem; }
+    .nav-links { gap: 1rem; }
+    .nav-links li:nth-child(n+3) { display: none; }
+    .section { padding: 2rem 1rem; }
+  }
+
+  /* PAGE VISIBILITY */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ANIMATION */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .page.active { animation: fadeUp 0.3s ease; }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const { createClient } = window.supabase;
+  const db = createClient(
+    'https://awsydxtbncckdaatepiq.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF3c3lkeHRibmNja2RhYXRlcGlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MDYyNDksImV4cCI6MjA5MDE4MjI0OX0.6ZSETgQe0R7Q20c5Jm8kl7IK_OTaTG25TI8jZHBPaxA'
+  );
+</script>
+
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <img src="logo_nacao.jpeg" alt="Nação Capoeira" style="height:44px;width:auto;">
+    <span>Nação Capoeira</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#" class="active" onclick="showPage('home');return false;">Accueil</a></li>
+    <li><a href="#" onclick="showPage('apprendre');return false;">Apprendre</a></li>
+    <li><a href="#" onclick="showPage('bibliotheque');return false;">Bibliothèque</a></li>
+    <li><a href="#" onclick="showPage('sorties');return false;">Sorties</a></li>
+  </ul>
+</nav>
+
+<!-- HERO (toujours visible) -->
+<div class="hero" id="hero">
+  <div class="hero-text">
+    <h1>Musiques de<br><span>Capoeira</span></h1>
+    <p>Apprends les rythmes du berimbau, de l'atabaque et du pandeiro. Explore notre bibliothèque de chants et Chante !</p>
+    <div class="hero-cta">
+      <a href="#" class="btn-primary" onclick="showPage('apprendre');return false;">Commencer à apprendre</a>
+      <a href="#" class="btn-outline" onclick="showPage('bibliotheque');return false;">Voir la bibliothèque</a>
+    </div>
+  </div>
+  <div class="hero-mascot">
+    <img src="ourson.png" alt="Mascotte Nação Capoeira">
+    
+    <div style="
+        color: rgba(255,255,255,0.75);
+        font-size: 0.85rem;
+        font-style: italic;
+        text-align: center;
+        margin-top: 0.75rem;
+        font-family: 'Barlow', sans-serif;
+    ">
+        ✦ Cadeau d'Ursinho ! ✦
+    </div>
+  </div>
+</div>
+
+<!-- SECTION HOME CONTENT -->
+<div id="home-content">
+  <div class="section">
+    <h2 class="section-title">Commence ton apprentissage</h2>
+    <p class="section-subtitle">Choisis un instrument et regarde ta première vidéo</p>
+
+    <div class="instruments-grid">
+
+      <!-- BERIMBAU -->
+      <div class="instrument-card" style="cursor:pointer;" onclick="openVideo('Toque de Base – Berimbau', 'https://www.youtube.com/results?search_query=berimbau+toque+angola+tutorial', 'Apprends le toque Angola, le rythme fondamental pour ouvrir une roda.')">
+        <div class="instrument-card-header">
+          <div class="instrument-icon">🎵</div>
+          <div>
+            <h3>Berimbau</h3>
+            <p>L'instrument principal de la capoeira</p>
+          </div>
+        </div>
+        <div class="instrument-card-body">
+          <div style="display:flex;align-items:center;gap:1rem;padding:0.5rem 0;">
+            <div class="play-btn">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg>
+            </div>
+            <div>
+              <strong style="font-size:0.9rem;">Toque de Base</strong>
+              <span style="display:block;font-size:0.8rem;color:#666;">Premier cours – Débutant</span>
+            </div>
+            <span class="video-level level-debutant" style="margin-left:auto;">Débutant</span>
+          </div>
+          <p style="font-size:0.85rem;color:#666;margin-top:0.5rem;line-height:1.5;">
+            Le berimbau est l'âme de la capoeira. Il dicte le rythme, la vitesse et le style du jogo. Commence ici.
+          </p>
+        </div>
+      </div>
+
+      <!-- ATABAQUE -->
+      <div class="instrument-card" style="cursor:pointer;" onclick="openVideo('Rythme de Base – Atabaque', 'https://www.youtube.com/results?search_query=atabaque+capoeira+angola+tutorial', 'Le rythme de base pour accompagner le jogo Angola.')">
+        <div class="instrument-card-header">
+          <div class="instrument-icon">🥁</div>
+          <div>
+            <h3>Atabaque</h3>
+            <p>Le cœur percussif de la roda</p>
+          </div>
+        </div>
+        <div class="instrument-card-body">
+          <div style="display:flex;align-items:center;gap:1rem;padding:0.5rem 0;">
+            <div class="play-btn">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg>
+            </div>
+            <div>
+              <strong style="font-size:0.9rem;">Rythme de Base</strong>
+              <span style="display:block;font-size:0.8rem;color:#666;">Premier cours – Débutant</span>
+            </div>
+            <span class="video-level level-debutant" style="margin-left:auto;">Débutant</span>
+          </div>
+          <p style="font-size:0.85rem;color:#666;margin-top:0.5rem;line-height:1.5;">
+            L'atabaque pose le groove de la roda. Apprends à accompagner le berimbau avec précision et feeling.
+          </p>
+        </div>
+      </div>
+
+      <!-- PANDEIRO -->
+      <div class="instrument-card" style="cursor:pointer;" onclick="openVideo('Rythme de Base – Pandeiro', 'https://www.youtube.com/results?search_query=pandeiro+capoeira+debutant+tenue', 'Comment tenir et positionner le pandeiro pour bien sonner.')">
+        <div class="instrument-card-header">
+          <div class="instrument-icon">🪘</div>
+          <div>
+            <h3>Pandeiro</h3>
+            <p>La couleur rythmique de l'orchestre</p>
+          </div>
+        </div>
+        <div class="instrument-card-body">
+          <div style="display:flex;align-items:center;gap:1rem;padding:0.5rem 0;">
+            <div class="play-btn">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg>
+            </div>
+            <div>
+              <strong style="font-size:0.9rem;">Rythme de base</strong>
+              <span style="display:block;font-size:0.8rem;color:#666;">Premier cours – Débutant</span>
+            </div>
+            <span class="video-level level-debutant" style="margin-left:auto;">Débutant</span>
+          </div>
+          <p style="font-size:0.85rem;color:#666;margin-top:0.5rem;line-height:1.5;">
+            Le pandeiro apporte la légèreté et la couleur au bateria. Commence par la bonne tenue avant tout.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="text-align:center;margin-top:2rem;">
+      <a href="#" class="btn-primary" onclick="showPage('apprendre');return false;">Voir tous les cours →</a>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</div>
+
+<!-- PAGE: APPRENDRE -->
+<div class="page active" id="page-apprendre" style="display:none;">
+  <div class="section">
+    <h2 class="section-title">Apprendre les rythmes</h2>
+    <p class="section-subtitle">Vidéos tutoriels pour débutants et pratiquants</p>
+    <div class="instruments-grid">
+
+      <!-- BERIMBAU -->
+      <div class="instrument-card">
+        <div class="instrument-card-header">
+          <div class="instrument-icon">🎵</div>
+          <div>
+            <h3>Berimbau</h3>
+            <p>L'instrument principal de la capoeira</p>
+          </div>
+        </div>
+        <div class="instrument-card-body">
+          <ul class="video-list">
+            <li class="video-item" onclick="openVideo('Toque de Angola – Berimbau', 'https://www.youtube.com/results?search_query=berimbau+toque+angola+tutorial', 'Apprends le toque Angola, le rythme fondamental pour ouvrir une roda.')">
+              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
+              <div class="video-info"><strong>Toque Angola</strong><span>Rythme de base</span></div>
+              <span class="video-level level-debutant">Débutant</span>
+            </li>
+            <li class="video-item" onclick="openVideo('Toque São Bento Grande – Berimbau', 'https://www.youtube.com/results?search_query=berimbau+sao+bento+grande+tutorial', 'Le São Bento Grande est le rythme de la Regional, rapide et énergique.')">
+              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
+              <div class="video-info"><strong>Toque São Bento Grande</strong><span>Regional</span></div>
+              <span class="video-level level-inter">Intermédiaire</span>
+            </li>
+            <li class="video-item" onclick="openVideo('Cavalaria – Berimbau', 'https://www.youtube.com/results?search_query=berimbau+cavalaria+tutorial', 'La Cavalaria est le signal d'alerte – prévient de l'arrivée de la police historiquement.')">
+              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
+              <div class="video-info"><strong>Cavalaria</strong><span>Toque spécial</span></div>
+              <span class="video-level level-inter">Intermédiaire</span>
+            </li>
+            <li class="video-item" onclick="openVideo('Iúna – Berimbau', 'https://www.youtube.com/results?search_query=berimbau+iuna+tutorial', 'L'Iúna est réservé aux formés – le jogo le plus élevé.')">
+              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
+              <div class="video-info"><strong>Iúna</strong><span>Pour les formés</span></div>
+              <span class="video-level level-avance">Avancé</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ATABAQUE -->
+      <div class="instrument-card">
+        <div class="instrument-card-header">
+          <div class="instrument-icon">🥁</div>
+          <div>
+            <h3>Atabaque</h3>
+            <p>Le cœur percussif de la roda</p>
+          </div>
+        </div>
+        <div class="instrument-card-body">
+          <ul class="video-list">
+            <li class="video-item" onclick="openVideo('Rythme Angola – Atabaque', 'https://www.youtube.com/results?search_query=atabaque+capoeira+angola+tutorial', 'Le rythme de base pour accompagner le jogo Angola.')">
+              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
+              <div class="video-info"><strong>Rythme Angola</strong><span>Groove de base</span></div>
+              <span class="video-level level-debutant">Débutant</span>
+            </li>
+            <li class="video-item" onclick="openVideo('Rythme Regional – Atabaque', 'https://www.youtube.com/results?search_query=atabaque+capoeira+regional+tutorial', 'Plus rapide, pour la Regional et ses toques énergiques.')">
+              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
+              <div class="video-info"><strong>Rythme Regional</strong><span>Tempo rapide</span></div>
+              <span class="video-level level-debutant">Débutant</span>
+            </li>
+            <li class="video-item" onclick="openVideo('Improvisation – Atabaque', 'https://www.youtube.com/results?search_query=atabaque+capoeira+improvisation', 'Apprends à improviser et répondre au berimbau.')">
+              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
+              <div class="video-info"><strong>Improvisation</strong><span>Dialogue avec le berimbau</span></div>
+              <span class="video-level level-avance">Avancé</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- PANDEIRO -->
+      <div class="instrument-card">
+        <div class="instrument-card-header">
+          <div class="instrument-icon">🪘</div>
+          <div>
+            <h3>Pandeiro</h3>
+            <p>La couleur rythmique de l'orchestre</p>
+          </div>
+        </div>
+        <div class="instrument-card-body">
+          <ul class="video-list">
+            <li class="video-item" onclick="openVideo('Tenue et posture – Pandeiro', 'https://www.youtube.com/results?search_query=pandeiro+capoeira+debutant+tenue', 'Comment tenir et positionner le pandeiro pour bien sonner.')">
+              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
+              <div class="video-info"><strong>Tenue et posture</strong><span>Bases essentielles</span></div>
+              <span class="video-level level-debutant">Débutant</span>
+            </li>
+            <li class="video-item" onclick="openVideo('Rythme Angola – Pandeiro', 'https://www.youtube.com/results?search_query=pandeiro+capoeira+angola+rythme', 'Accompagnement pour le jogo Angola.')">
+              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
+              <div class="video-info"><strong>Rythme Angola</strong><span>Accompagnement</span></div>
+              <span class="video-level level-debutant">Débutant</span>
+            </li>
+            <li class="video-item" onclick="openVideo('Syncopation – Pandeiro', 'https://www.youtube.com/results?search_query=pandeiro+capoeira+syncopation+advanced', 'Techniques de syncopation avancées pour enrichir le son.')">
+              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
+              <div class="video-info"><strong>Syncopation avancée</strong><span>Techniques expressives</span></div>
+              <span class="video-level level-avance">Avancé</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: BIBLIOTHÈQUE -->
+<div class="page" id="page-bibliotheque">
+  <div class="section">
+    <h2 class="section-title">Bibliothèque musicale</h2>
+    <p class="section-subtitle">Chants, paroles et audios – filtre par genre</p>
+
+    <div class="library-controls">
+      <input type="text" class="search-bar" id="search-input" placeholder="Rechercher un chant..." oninput="filterMusic()">
+      <div class="genre-filters">
+        <button class="genre-btn active" data-genre="all" onclick="setGenre('all', this)">Tous</button>
+        <button class="genre-btn" data-genre="angola" onclick="setGenre('angola', this)">Angola</button>
+        <button class="genre-btn" data-genre="regional" onclick="setGenre('regional', this)">Regional</button>
+        <button class="genre-btn" data-genre="ladainha" onclick="setGenre('ladainha', this)">Ladainha</button>
+        <button class="genre-btn" data-genre="fav" onclick="setGenre('fav', this)">❤ Favoris</button>
+      </div>
+    </div>
+
+    <div class="music-grid" id="music-grid"></div>
+    <div class="no-results" id="no-results" style="display:none;">Aucun chant trouvé pour ce filtre.</div>
+  </div>
+</div>
+
+<!-- PAGE: SORTIES -->
+<div class="page" id="page-sorties">
+  <div class="section">
+    <h2 class="section-title">Sorties récentes</h2>
+    <p class="section-subtitle">Les dernières musiques publiées par Nação Capoeira</p>
+    <div class="releases-list">
+      <div class="release-item">
+        <span class="release-new">Nouveau</span>
+        <div class="release-info">
+          <h4>Zum zum zum capoeira matou um</h4>
+          <p>Version live – Roda de Nação 2025 • Mestre Zumba</p>
+        </div>
+        <span class="genre-tag tag-angola">Angola</span>
+        <span class="release-date">Mars 2025</span>
+      </div>
+      <div class="release-item">
+        <span class="release-new">Nouveau</span>
+        <div class="release-info">
+          <h4>Paranauê</h4>
+          <p>Enregistrement studio • Chœur de Nação Capoeira</p>
+        </div>
+        <span class="genre-tag tag-regional">Regional</span>
+        <span class="release-date">Fév. 2025</span>
+      </div>
+      <div class="release-item">
+        <div class="release-info">
+          <h4>Dona Maria do Camboatá</h4>
+          <p>Ladainha d'ouverture de roda • Mestre Zumba</p>
+        </div>
+        <span class="genre-tag tag-ladainha">Ladainha</span>
+        <span class="release-date">Jan. 2025</span>
+      </div>
+      <div class="release-item">
+        <div class="release-info">
+          <h4>É hora, é hora</h4>
+          <p>Corrido rapide • Groupe Nação Capoeira Paris</p>
+        </div>
+        <span class="genre-tag tag-regional">Regional</span>
+        <span class="release-date">Déc. 2024</span>
+      </div>
+      <div class="release-item">
+        <div class="release-info">
+          <h4>Açai meu bem</h4>
+          <p>Angola tradicional • Mestre Pastinha hommage</p>
+        </div>
+        <span class="genre-tag tag-angola">Angola</span>
+        <span class="release-date">Nov. 2024</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL VIDÉO -->
+<div class="modal-overlay" id="video-modal" onclick="closeModal('video-modal')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 id="video-modal-title">Titre</h3>
+      <button class="modal-close" onclick="closeModal('video-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="video-embed">
+        <div style="text-align:center;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">▶</div>
+          <div id="video-modal-link"></div>
+          <div style="margin-top:0.5rem;font-size:0.78rem;color:rgba(255,255,255,0.5);">Cliquer le lien pour ouvrir YouTube</div>
+        </div>
+      </div>
+      <p class="video-desc" id="video-modal-desc"></p>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PAROLES -->
+<div class="modal-overlay" id="lyrics-modal" onclick="closeModal('lyrics-modal')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 id="lyrics-modal-title">Paroles</h3>
+      <button class="modal-close" onclick="closeModal('lyrics-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="lyrics-modal-video" style="display:none;margin-bottom:1rem;"></div>
+      <div class="lyrics-box" id="lyrics-modal-text"></div>
+      <div class="audio-player-box">
+        <span style="font-size:1.5rem;">🎵</span>
+        <div>
+          <div style="font-weight:600;margin-bottom:2px;" id="lyrics-modal-audio-title"></div>
+          <div class="audio-note">Audio disponible lors de l'ajout de fichiers par l'administrateur.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>Nação Capoeira</strong> – Musiques et apprentissage<br>
+  <span style="font-size:0.78rem;">Tout le contenu appartient à leurs auteurs respectifs.</span>
+</footer>
+
+<script>
+// ---- DATA ----
+let songs = [];
+
+async function loadSongs() {
+  const { data, error } = await db
+    .from('songs')
+    .select('*')
+    .order('id', { ascending: false });
+
+  if (error) {
+    console.error('Erreur chargement musiques:', error);
+    return;
+  }
+  songs = data.map(s => ({
+    id: s.id,
+    title: s.title,
+    genre: s.genre,
+    meta: s.meta,
+    lyrics: s.lyrics,
+    videoUrl: s.video_url
+  }));
+  filterMusic();
+}
+
+let favorites = JSON.parse(localStorage.getItem('nacao_favs') || '[]');
+let currentGenre = 'all';
+
+function saveFavs() {
+  localStorage.setItem('nacao_favs', JSON.stringify(favorites));
+}
+
+function toggleFav(id, btn) {
+  if (favorites.includes(id)) {
+    favorites = favorites.filter(f => f !== id);
+    btn.classList.remove('active');
+  } else {
+    favorites.push(id);
+    btn.classList.add('active');
+  }
+  saveFavs();
+  if (currentGenre === 'fav') filterMusic();
+}
+
+function setGenre(genre, btn) {
+  currentGenre = genre;
+  document.querySelectorAll('.genre-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filterMusic();
+}
+
+function filterMusic() {
+  const q = document.getElementById('search-input') ? document.getElementById('search-input').value.toLowerCase() : '';
+  let filtered = songs;
+  if (currentGenre !== 'all' && currentGenre !== 'fav') {
+    filtered = filtered.filter(s => s.genre === currentGenre);
+  }
+  if (currentGenre === 'fav') {
+    filtered = filtered.filter(s => favorites.includes(s.id));
+  }
+  if (q) {
+    filtered = filtered.filter(s =>
+      s.title.toLowerCase().includes(q) ||
+      s.meta.toLowerCase().includes(q)
+    );
+  }
+  renderMusic(filtered);
+}
+
+function renderMusic(list) {
+  const grid = document.getElementById('music-grid');
+  const noRes = document.getElementById('no-results');
+  if (list.length === 0) {
+    grid.innerHTML = '';
+    noRes.style.display = 'block';
+    return;
+  }
+  noRes.style.display = 'none';
+  grid.innerHTML = list.map(s => {
+    const isFav = favorites.includes(s.id);
+    const tagClass = { angola: 'tag-angola', regional: 'tag-regional', ladainha: 'tag-ladainha' }[s.genre];
+    const tagLabel = { angola: 'Angola', regional: 'Regional', ladainha: 'Ladainha' }[s.genre];
+    return `
+    <div class="music-card">
+      <div class="music-card-top">
+        <h4>${s.title}</h4>
+        <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFav(${s.id}, this)" title="Ajouter aux favoris">♥</button>
+      </div>
+      <div><span class="genre-tag ${tagClass}">${tagLabel}</span></div>
+      <div class="music-meta">${s.meta}</div>
+      <div class="music-actions">
+        <button class="action-btn" onclick="openLyrics(${s.id})">📜 Paroles</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ---- NAVIGATION ----
+function showPage(name) {
+  // update nav
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  const navMap = { home: 0, apprendre: 1, bibliotheque: 2, sorties: 3 };
+  const idx = navMap[name];
+  if (idx !== undefined) document.querySelectorAll('.nav-links a')[idx].classList.add('active');
+
+  // show/hide hero
+  document.getElementById('hero').style.display = name === 'home' ? 'flex' : 'none';
+  document.getElementById('home-content').style.display = name === 'home' ? 'block' : 'none';
+
+  // hide all pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+
+  if (name !== 'home') {
+    const page = document.getElementById('page-' + name);
+    if (page) page.classList.add('active');
+    if (name === 'bibliotheque') filterMusic();
+  }
+}
+
+// ---- MODALS ----
+function openVideo(title, url, desc) {
+  document.getElementById('video-modal-title').textContent = title;
+  document.getElementById('video-modal-desc').textContent = desc;
+  document.getElementById('video-modal-link').innerHTML = `<a href="${url}" target="_blank">▶ Voir sur YouTube →</a>`;
+  document.getElementById('video-modal').classList.add('open');
+}
+
+function openLyrics(id) {
+  const song = songs.find(s => s.id === id);
+  if (!song) return;
+  document.getElementById('lyrics-modal-title').textContent = song.title;
+  const formatted = song.lyrics.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+  document.getElementById('lyrics-modal-text').innerHTML = formatted;
+  document.getElementById('lyrics-modal-audio-title').textContent = song.title;
+  
+  const videoSection = document.getElementById('lyrics-modal-video');
+  if (song.videoUrl) {
+    videoSection.style.display = 'block';
+    videoSection.innerHTML = `
+      <div style="margin-bottom:1rem;">
+        <a href="${song.videoUrl}" target="_blank" style="
+          display:inline-flex;align-items:center;gap:0.5rem;
+          background:var(--blue);color:var(--yellow);
+          padding:0.6rem 1.25rem;border-radius:6px;
+          text-decoration:none;font-weight:600;font-size:0.9rem;
+        ">▶ Voir la vidéo sur YouTube</a>
+      </div>`;
+  } else {
+    videoSection.style.display = 'none';
+  }
+  
+  document.getElementById('lyrics-modal').classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
+  }
+});
+
+// Init
+showPage('home');
+loadSongs();
+</script>
+</body>
+</html>
