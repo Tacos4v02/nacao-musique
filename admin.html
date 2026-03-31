@@ -199,6 +199,21 @@
   .tag-angola { background: #fff3e0; color: #bf5100; }
   .tag-regional { background: #e3f2fd; color: #0d47a1; }
   .tag-ladainha { background: #e8f5e9; color: #1b5e20; }
+  
+  .btn-edit {
+    background: none;
+    border: 1.5px solid #e0e0e0;
+    color: #0a1a3d;
+    padding: 0.4rem 0.85rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .btn-edit:hover { background: #e8eef8; border-color: #0a1a3d; }
+  
   .btn-delete {
     background: none;
     border: 1.5px solid #e0e0e0;
@@ -281,6 +296,55 @@
       <div class="form-error" id="form-error"></div>
     </div>
 
+    <div class="form-card" id="edit-card" style="display:none;border-left:4px solid #f0c040;">
+      <h2>Modifier la musique</h2>
+      <input type="hidden" id="e-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Titre</label>
+          <input type="text" id="e-title">
+        </div>
+        <div class="form-group">
+          <label>Genre</label>
+          <select id="e-genre">
+            <option value="angola">Angola</option>
+            <option value="regional">Regional</option>
+            <option value="ladainha">Ladainha</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full">
+          <label>Description</label>
+          <input type="text" id="e-meta">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full">
+          <label>Lien vidéo YouTube (optionnel)</label>
+          <input type="text" id="e-video">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full">
+          <label>Paroles (Portugais)</label>
+          <textarea id="e-lyrics"></textarea>
+        </div>
+      </div>
+    <div class="form-row">
+        <div class="form-group full">
+          <label>Traduction (Français)</label>
+          <textarea id="e-translation"></textarea>
+        </div>
+      </div>
+      <div style="display:flex;gap:1rem;margin-top:0.5rem;">
+        <button class="btn-submit" id="edit-btn" onclick="saveEdit()">Sauvegarder</button>
+        <button class="btn-submit" style="background:#e0e0e0;color:#444;" onclick="cancelEdit()">Annuler</button>
+      </div>
+      <div class="form-success" id="edit-success">✓ Musique modifiée !</div>
+      <div class="form-error" id="edit-error"></div>
+    </div>
+
     <div class="section-title">Musiques existantes</div>
     <div class="songs-list" id="songs-list">
       <div class="empty">Chargement...</div>
@@ -313,7 +377,7 @@
       .from('songs')
       .select('*')
       .order('id', { ascending: false });
-
+    allSongs = data;
     const list = document.getElementById('songs-list');
     if (error || !data.length) {
       list.innerHTML = '<div class="empty">Aucune musique pour l\'instant.</div>';
@@ -329,6 +393,7 @@
           <span>${s.meta}</span>
         </div>
         <span class="genre-tag ${tagClass}">${tagLabel}</span>
+        <button class="btn-edit" onclick="editSong(${s.id})">Modifier</button>
         <button class="btn-delete" onclick="deleteSong(${s.id})">Supprimer</button>
       </div>`;
     }).join('');
@@ -381,6 +446,63 @@
     loadSongs();
   }
 
+  let allSongs = [];
+
+function editSong(id) {
+  const song = allSongs.find(s => s.id === id);
+  if (!song) return;
+  document.getElementById('e-id').value = song.id;
+  document.getElementById('e-title').value = song.title;
+  document.getElementById('e-genre').value = song.genre;
+  document.getElementById('e-meta').value = song.meta || '';
+  document.getElementById('e-video').value = song.video_url || '';
+  document.getElementById('e-lyrics').value = song.lyrics || '';
+  document.getElementById('e-translation').value = song.translation || '';
+  document.getElementById('edit-card').style.display = 'block';
+  document.getElementById('edit-card').scrollIntoView({ behavior: 'smooth' });
+}
+
+function cancelEdit() {
+  document.getElementById('edit-card').style.display = 'none';
+}
+
+async function saveEdit() {
+  const id = document.getElementById('e-id').value;
+  const title = document.getElementById('e-title').value.trim();
+  const genre = document.getElementById('e-genre').value;
+  const meta = document.getElementById('e-meta').value.trim();
+  const lyrics = document.getElementById('e-lyrics').value.trim();
+  const translation = document.getElementById('e-translation').value.trim();
+  const video_url = document.getElementById('e-video').value.trim();
+
+  const btn = document.getElementById('edit-btn');
+  const successEl = document.getElementById('edit-success');
+  const errorEl = document.getElementById('edit-error');
+  successEl.style.display = 'none';
+  errorEl.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Sauvegarde...';
+
+  const { error } = await db.from('songs').update({
+    title, genre, meta, lyrics,
+    translation: translation || null,
+    video_url: video_url || null
+  }).eq('id', id);
+
+  btn.disabled = false;
+  btn.textContent = 'Sauvegarder';
+
+  if (error) {
+    errorEl.textContent = 'Erreur : ' + error.message;
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  successEl.style.display = 'block';
+  document.getElementById('edit-card').style.display = 'none';
+  loadSongs();
+}
+  
   async function deleteSong(id) {
     if (!confirm('Supprimer cette musique ?')) return;
     const { error } = await db.from('songs').delete().eq('id', id);
