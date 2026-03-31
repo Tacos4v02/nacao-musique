@@ -1062,7 +1062,7 @@ function renderMusic(list) {
 // ---- NAVIGATION ----
 function showPage(name) {
   // update nav
-  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remo ve('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
   const navMap = { home: 0, apprendre: 1, bibliotheque: 2, sorties: 3 };
   const idx = navMap[name];
   if (idx !== undefined) document.querySelectorAll('.nav-links a')[idx].classList.add('active');
