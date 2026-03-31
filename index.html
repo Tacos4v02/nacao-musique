@@ -1043,7 +1043,7 @@ function renderMusic(list) {
     const tagClass = { angola: 'tag-angola', regional: 'tag-regional', ladainha: 'tag-ladainha' }[s.genre];
     const tagLabel = { angola: 'Angola', regional: 'Regional', ladainha: 'Ladainha' }[s.genre];
     return `
-    <div class="music-card">
+    <div class="music-card" style="cursor:pointer;" onclick="openLyrics(${s.id})">
       <div class="music-card-top">
         <h4>${s.title}</h4>
         <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFav(${s.id}, this)" title="Ajouter aux favoris">♥</button>
@@ -1162,8 +1162,10 @@ let y = 52;
 const pageHeight = 275;
 
 segments.forEach(segment => {
+  if (!segment || segment.trim() === '') return;
   const isBold = segment.startsWith('**') && segment.endsWith('**');
   const text = isBold ? segment.slice(2, -2) : segment;
+  if (!text.trim()) return;
   doc.setFont('helvetica', isBold ? 'bold' : 'normal');
   doc.setFontSize(12);
   doc.setTextColor(30, 30, 30);
