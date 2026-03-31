@@ -980,6 +980,7 @@ async function loadSongs() {
     genre: s.genre,
     meta: s.meta,
     lyrics: s.lyrics,
+    translation: s.translation,
     videoUrl: s.video_url
   }));
   filterMusic();
@@ -1092,9 +1093,24 @@ function openLyrics(id) {
   const song = songs.find(s => s.id === id);
   if (!song) return;
   document.getElementById('lyrics-modal-title').textContent = song.title;
-  const formatted = song.lyrics.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-  document.getElementById('lyrics-modal-text').innerHTML = formatted;
-  document.getElementById('lyrics-modal-audio-title').textContent = song.title;
+  if (song.translation) {
+    const ptLines = song.lyrics.split('\n');
+    const frLines = song.translation.split('\n');
+    const rows = ptLines.map((line, i) => {
+      const pt = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      const fr = (frLines[i] || '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      return `
+        <tr>
+          <td style="padding:4px 12px 4px 0;width:50%;vertical-align:top;color:#1a1a1a;">${pt}</td>
+          <td style="padding:4px 0 4px 12px;width:50%;vertical-align:top;color:#666;border-left:2px solid #e0e0e0;padding-left:12px;">${fr}</td>
+        </tr>`;
+    }).join('');
+    document.getElementById('lyrics-modal-text').innerHTML = `<table style="width:100%;border-collapse:collapse;">${rows}</table>`;
+  } else {
+    const formatted = song.lyrics.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+    document.getElementById('lyrics-modal-text').innerHTML = formatted;
+  }
+    document.getElementById('lyrics-modal-audio-title').textContent = song.title;
   
   const videoSection = document.getElementById('lyrics-modal-video');
   if (song.videoUrl) {

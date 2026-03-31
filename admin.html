@@ -268,8 +268,12 @@
       </div>
       <div class="form-row">
         <div class="form-group full">
-          <label>Paroles</label>
-          <textarea id="f-lyrics" placeholder="Colle les paroles ici..."></textarea>
+          <label>Paroles (Portugais)</label>
+          <textarea id="f-lyrics" placeholder="Colle les paroles en portugais..."></textarea>
+        </div>
+        <div class="form-group full">
+          <label>Traduction (Français)</label>
+          <textarea id="f-translation" placeholder="Colle la traduction ligne par ligne..."></textarea>
         </div>
       </div>
       <button class="btn-submit" id="submit-btn" onclick="addSong()">Ajouter la musique</button>
@@ -335,6 +339,7 @@
     const genre = document.getElementById('f-genre').value;
     const meta = document.getElementById('f-meta').value.trim();
     const lyrics = document.getElementById('f-lyrics').value.trim();
+    const translation = document.getElementById('f-translation').value.trim();
     const video_url = document.getElementById('f-video').value.trim();
 
     const successEl = document.getElementById('form-success');
@@ -354,7 +359,7 @@
     btn.textContent = 'Ajout en cours...';
 
     const { data, error } = await db.from('songs').insert([{
-      title, genre, meta, lyrics, video_url: video_url || null
+      title, genre, meta, lyrics, translation: translation || null, video_url: video_url || null
     }], { returning: 'minimal' });
     console.log('data:', data);
     console.log('error:', error);
