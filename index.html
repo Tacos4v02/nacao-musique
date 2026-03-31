@@ -1173,29 +1173,61 @@ function downloadPDF(id) {
 
   doc.setFontSize(12);
   doc.setTextColor(30, 30, 30);
-  const segments = song.lyrics.split(/(\*\*.*?\*\*)/g);
-let y = 52;
-const pageHeight = 275;
-
-segments.forEach(segment => {
-  if (!segment || segment.trim() === '') return;
-  const isBold = segment.startsWith('**') && segment.endsWith('**');
-  const text = isBold ? segment.slice(2, -2) : segment;
-  if (!text.trim()) return;
-  doc.setFont('helvetica', isBold ? 'bold' : 'normal');
-  doc.setFontSize(12);
-  doc.setTextColor(30, 30, 30);
-  const lines = doc.splitTextToSize(text, 170);
-  lines.forEach(line => {
-    if (y > pageHeight) {
-      doc.addPage();
-      y = 20;
-    }
-    doc.text(line, 20, y);
-    y += 7;
-  });
-});
+if (song.translation) {
+  const ptLines = song.lyrics.split('\n');
+  const frLines = song.translation.split('\n');
   
+  ptLines.forEach((ptLine, i) => {
+    const frLine = frLines[i] || '';
+    const ptText = ptLine.replace(/\*\*(.*?)\*\*/g, '$1');
+    const frText = frLine.replace(/\*\*(.*?)\*\*/g, '$1');
+    
+    if (y > pageHeight) { doc.addPage(); y = 20; }
+    
+    const colWidth = 80;
+    const ptLines2 = doc.splitTextToSize(ptText, colWidth);
+    const frLines2 = doc.splitTextToSize(frText, colWidth);
+    const maxLines = Math.max(ptLines2.length, frLines2.length);
+    
+    doc.setFont('helvetica', 'bold');
+    ptLines2.forEach((line, j) => {
+      if (y + (j * 6) > pageHeight) { doc.addPage(); y = 20; }
+      doc.setFont('helvetica', ptLine.startsWith('**') ? 'bold' : 'normal');
+      doc.setTextColor(30, 30, 30);
+      doc.text(line, 20, y + (j * 6));
+    });
+    
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 100, 100);
+    frLines2.forEach((line, j) => {
+      doc.text(line, 115, y + (j * 6));
+    });
+    
+    doc.setDrawColor(220, 220, 220);
+    doc.setLineWidth(0.3);
+    doc.line(110, y - 4, 110, y + (maxLines * 6));
+    
+    y += maxLines * 6 + 2;
+  });
+} else {
+  const segments = song.lyrics.split(/(\*\*.*?\*\*)/g);
+  segments.forEach(segment => {
+    if (!segment || segment.trim() === '') return;
+    const isBold = segment.startsWith('**') && segment.endsWith('**');
+    const text = isBold ? segment.slice(2, -2) : segment;
+    if (!text.trim()) return;
+    doc.setFont('helvetica', isBold ? 'bold' : 'normal');
+    doc.setFontSize(12);
+    doc.setTextColor(30, 30, 30);
+    const lines = doc.splitTextToSize(text, 170);
+    lines.forEach(line => {
+      if (y > pageHeight) { doc.addPage(); y = 20; }
+      doc.text(line, 20, y);
+      y += 7;
+    });
+  });
+}
+
 
   doc.setFontSize(9);
   doc.setTextColor(150, 150, 150);
