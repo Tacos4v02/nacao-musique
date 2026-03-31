@@ -1151,9 +1151,27 @@ function downloadPDF(id) {
 
   doc.setFontSize(12);
   doc.setTextColor(30, 30, 30);
-  const lyrics = song.lyrics.replace(/\*\*(.*?)\*\*/g, '$1');
-  const lines = doc.splitTextToSize(lyrics, 170);
-  doc.text(lines, 20, 52);
+  const segments = song.lyrics.split(/(\*\*.*?\*\*)/g);
+let y = 52;
+const pageHeight = 275;
+
+segments.forEach(segment => {
+  const isBold = segment.startsWith('**') && segment.endsWith('**');
+  const text = isBold ? segment.slice(2, -2) : segment;
+  doc.setFont('helvetica', isBold ? 'bold' : 'normal');
+  doc.setFontSize(12);
+  doc.setTextColor(30, 30, 30);
+  const lines = doc.splitTextToSize(text, 170);
+  lines.forEach(line => {
+    if (y > pageHeight) {
+      doc.addPage();
+      y = 20;
+    }
+    doc.text(line, 20, y);
+    y += 7;
+  });
+});
+  
 
   doc.setFontSize(9);
   doc.setTextColor(150, 150, 150);
