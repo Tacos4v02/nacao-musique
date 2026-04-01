@@ -1230,20 +1230,21 @@ function renderVideos() {
     </div>`;
   } else if (baseVideos.length > 1) {
     html += `<div class="approfondissement-title">Cours de base</div>`;
-    html += `<div class="videos-grid">`;
+    html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem;">`;
     baseVideos.forEach(v => {
       const thumb = getThumb(v.youtube_url);
       html += `
-      <div class="video-card" onclick="openYoutubeVideo('${v.youtube_url}', '${v.titre.replace(/'/g,"\\'")}', '${(v.description||'').replace(/'/g,"\\'")}')">
-        <div class="video-card-thumb">
+      <div class="video-base-card" style="margin-bottom:0;" onclick="openYoutubeVideo('${v.youtube_url}', '${v.titre.replace(/'/g,"\\'")}', '${(v.description||'').replace(/'/g,"\\'")}')">
+        <div class="video-base-thumb">
           ${thumb ? `<img src="${thumb}" alt="${v.titre}">` : ''}
-          <div class="mini-play">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#00028e"/></svg>
+          <div class="video-play-overlay">
+            <svg width="22" height="22" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#00028e"/></svg>
           </div>
         </div>
-        <div class="video-card-body">
-          <strong>${v.titre}</strong>
-          <span>${v.description || ''}</span>
+        <div class="video-base-info">
+          <div class="video-base-badge">Cours de base</div>
+          <h3>${v.titre}</h3>
+          <p>${v.description || ''}</p>
         </div>
       </div>`;
     });
