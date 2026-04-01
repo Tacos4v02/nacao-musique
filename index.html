@@ -1116,10 +1116,7 @@ function showPage(name) {
 
 // ---- MODALS ----
 function openVideo(title, url, desc) {
-  document.getElementById('video-modal-title').textContent = title;
-  document.getElementById('video-modal-desc').textContent = desc;
-  document.getElementById('video-modal-link').innerHTML = `<a href="${url}" target="_blank">▶ Voir sur YouTube →</a>`;
-  document.getElementById('video-modal').classList.add('open');
+  openYoutubeVideo(url, title, desc);
 }
 
 function openLyrics(id) {
