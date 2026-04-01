@@ -1206,27 +1206,48 @@ function renderVideos() {
   const container = document.getElementById('videos-content');
   if (!container) return;
   const instrVideos = videos.filter(v => v.instrument === currentInstrumentTab);
-  const baseVideo = instrVideos.find(v => v.niveau === 'base');
+  const baseVideos = instrVideos.filter(v => v.niveau === 'base');
   const approVideos = instrVideos.filter(v => v.niveau === 'approfondissement');
 
   let html = '';
 
-  if (baseVideo) {
-    const thumb = getThumb(baseVideo.youtube_url);
+  if (baseVideos.length === 1) {
+    const v = baseVideos[0];
+    const thumb = getThumb(v.youtube_url);
     html += `
-    <div class="video-base-card" onclick="openYoutubeVideo('${baseVideo.youtube_url}', '${baseVideo.titre.replace(/'/g,"\\'")}', '${(baseVideo.description||'').replace(/'/g,"\\'")}')">
+    <div class="video-base-card" onclick="openYoutubeVideo('${v.youtube_url}', '${v.titre.replace(/'/g,"\\'")}', '${(v.description||'').replace(/'/g,"\\'")}')">
       <div class="video-base-thumb">
-        ${thumb ? `<img src="${thumb}" alt="${baseVideo.titre}">` : ''}
+        ${thumb ? `<img src="${thumb}" alt="${v.titre}">` : ''}
         <div class="video-play-overlay">
           <svg width="22" height="22" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#00028e"/></svg>
         </div>
       </div>
       <div class="video-base-info">
         <div class="video-base-badge">Cours de base</div>
-        <h3>${baseVideo.titre}</h3>
-        <p>${baseVideo.description || ''}</p>
+        <h3>${v.titre}</h3>
+        <p>${v.description || ''}</p>
       </div>
     </div>`;
+  } else if (baseVideos.length > 1) {
+    html += `<div class="approfondissement-title">Cours de base</div>`;
+    html += `<div class="videos-grid">`;
+    baseVideos.forEach(v => {
+      const thumb = getThumb(v.youtube_url);
+      html += `
+      <div class="video-card" onclick="openYoutubeVideo('${v.youtube_url}', '${v.titre.replace(/'/g,"\\'")}', '${(v.description||'').replace(/'/g,"\\'")}')">
+        <div class="video-card-thumb">
+          ${thumb ? `<img src="${thumb}" alt="${v.titre}">` : ''}
+          <div class="mini-play">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#00028e"/></svg>
+          </div>
+        </div>
+        <div class="video-card-body">
+          <strong>${v.titre}</strong>
+          <span>${v.description || ''}</span>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
   }
 
   if (approVideos.length > 0) {
@@ -1251,7 +1272,7 @@ function renderVideos() {
     html += `</div>`;
   }
 
-  if (!baseVideo && approVideos.length === 0) {
+  if (!baseVideos.length && !approVideos.length) {
     html = `<div style="text-align:center;padding:3rem;color:#999;">Aucune vidéo pour cet instrument pour l'instant.</div>`;
   }
 
