@@ -1096,8 +1096,9 @@ function openLyrics(id) {
   if (song.translation) {
     const ptLines = song.lyrics.split('\n');
     const frLines = song.translation.split('\n');
-    const rows = ptLines.map((line, i) => {
-      const pt = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    const maxLen = Math.max(ptLines.length, frLines.length);
+    const rows = Array.from({length: maxLen}, (_, i) => {
+      const pt = (ptLines[i] || '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
       const fr = (frLines[i] || '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
       return `
         <tr>
@@ -1181,7 +1182,8 @@ function downloadPDF(id) {
     const ptLines = song.lyrics.split('\n');
     const frLines = song.translation.split('\n');
 
-    ptLines.forEach((ptLine, i) => {
+    const maxLen = Math.max(ptLines.length, frLines.length);
+    Array.from({length: maxLen}, (_, i) => ptLines[i] || '').forEach((ptLine, i) => {
       const frLine = frLines[i] || '';
       const ptText = ptLine.replace(/\*\*(.*?)\*\*/g, '$1');
       const frText = frLine.replace(/\*\*(.*?)\*\*/g, '$1');
