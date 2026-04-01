@@ -251,6 +251,57 @@
   </nav>
 
   <div class="admin-content">
+    <div class="section-title">Ajouter une vidéo</div>
+
+    <div class="form-card">
+      <h2>Nouvelle vidéo</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Instrument</label>
+          <select id="v-instrument">
+            <option value="berimbau">Berimbau</option>
+            <option value="atabaque">Atabaque</option>
+            <option value="pandeiro">Pandeiro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Niveau</label>
+          <select id="v-niveau">
+            <option value="base">Cours de base</option>
+            <option value="approfondissement">Approfondissement</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full">
+          <label>Titre</label>
+          <input type="text" id="v-titre" placeholder="Ex: Rythme de base – Berimbau">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full">
+          <label>Lien YouTube</label>
+          <input type="text" id="v-url" placeholder="https://www.youtube.com/watch?v=...">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full">
+          <label>Description (optionnel)</label>
+          <input type="text" id="v-desc" placeholder="Courte description de la vidéo">
+        </div>
+      </div>
+      <button class="btn-submit" id="v-submit-btn" onclick="addVideo()">Ajouter la vidéo</button>
+      <div class="form-success" id="v-form-success">✓ Vidéo ajoutée !</div>
+      <div class="form-error" id="v-form-error"></div>
+    </div>
+
+    <div class="section-title">Vidéos existantes</div>
+    <div class="songs-list" id="videos-list">
+      <div class="empty">Chargement...</div>
+    </div>
+
+    <div style="margin: 2rem 0;height:1px;background:#e0e0e0;"></div>
+    
     <div class="section-title">Ajouter une musique</div>
 
     <div class="form-card">
@@ -353,14 +404,90 @@
 </div>
 
 <script>
-  const MOT_DE_PASSE = 'nacao2025';
+  const MOT_DE_PASSE = 'nacao94';
 
+  async function loadVideos() {
+  const { data, error } = await db
+    .from('videos')
+    .select('*')
+    .order('id', { ascending: true });
+
+  const list = document.getElementById('videos-list');
+  if (error || !data || !data.length) {
+    list.innerHTML = '<div class="empty">Aucune vidéo pour l\'instant.</div>';
+    return;
+  }
+
+  const instrLabel = { berimbau: 'Berimbau', atabaque: 'Atabaque', pandeiro: 'Pandeiro' };
+  const niveauLabel = { base: 'Base', approfondissement: 'Approfondissement' };
+
+  list.innerHTML = data.map(v => `
+    <div class="song-row" id="vrow-${v.id}">
+      <div class="song-row-info">
+        <strong>${v.titre}</strong>
+        <span>${instrLabel[v.instrument]} — ${niveauLabel[v.niveau]}</span>
+      </div>
+      <span class="genre-tag tag-regional">${instrLabel[v.instrument]}</span>
+      <button class="btn-delete" onclick="deleteVideo(${v.id})">Supprimer</button>
+    </div>`).join('');
+}
+
+async function addVideo() {
+  const instrument = document.getElementById('v-instrument').value;
+  const niveau = document.getElementById('v-niveau').value;
+  const titre = document.getElementById('v-titre').value.trim();
+  const youtube_url = document.getElementById('v-url').value.trim();
+  const description = document.getElementById('v-desc').value.trim();
+
+  const successEl = document.getElementById('v-form-success');
+  const errorEl = document.getElementById('v-form-error');
+  const btn = document.getElementById('v-submit-btn');
+
+  successEl.style.display = 'none';
+  errorEl.style.display = 'none';
+
+  if (!titre || !youtube_url) {
+    errorEl.textContent = 'Titre et lien YouTube sont obligatoires.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Ajout en cours...';
+
+  const { error } = await db.from('videos').insert([{
+    instrument, niveau, titre, youtube_url, description: description || null
+  }]);
+
+  btn.disabled = false;
+  btn.textContent = 'Ajouter la vidéo';
+
+  if (error) {
+    errorEl.textContent = 'Erreur : ' + error.message;
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  successEl.style.display = 'block';
+  document.getElementById('v-titre').value = '';
+  document.getElementById('v-url').value = '';
+  document.getElementById('v-desc').value = '';
+  loadVideos();
+}
+
+async function deleteVideo(id) {
+  if (!confirm('Supprimer cette vidéo ?')) return;
+  const { error } = await db.from('videos').delete().eq('id', id);
+  if (!error) document.getElementById('vrow-' + id).remove();
+}
+  
   function login() {
     const val = document.getElementById('password-input').value;
     if (val === MOT_DE_PASSE) {
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('admin-screen').style.display = 'block';
       loadSongs();
+      loadVideos();
     } else {
       document.getElementById('login-error').style.display = 'block';
     }

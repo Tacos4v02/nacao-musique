@@ -519,6 +519,119 @@
   }
   .audio-note { color: rgba(255,255,255,0.6); font-size: 0.82rem; }
 
+  /* VIDEOS */
+.video-base-card {
+  background: var(--blue);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 2rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.video-base-card:hover { transform: translateY(-3px); }
+.video-base-thumb {
+  background: #000;
+  aspect-ratio: 16/9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.video-base-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+}
+.video-play-overlay {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  background: var(--yellow);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.video-base-info {
+  padding: 1.25rem 1.5rem;
+  color: var(--white);
+}
+.video-base-info h3 {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  margin-bottom: 0.25rem;
+}
+.video-base-info p { font-size: 0.85rem; color: rgba(255,255,255,0.7); }
+.video-base-badge {
+  display: inline-block;
+  background: var(--yellow);
+  color: var(--blue);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-bottom: 0.5rem;
+}
+.videos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+.video-card {
+  background: var(--white);
+  border: 1px solid #e0e0e0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.video-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,140,0.12);
+  transform: translateY(-2px);
+}
+.video-card-thumb {
+  background: #111;
+  aspect-ratio: 16/9;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.video-card-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.85;
+}
+.video-card-thumb .mini-play {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: var(--yellow);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.video-card-body {
+  padding: 0.85rem 1rem;
+}
+.video-card-body strong { display: block; font-size: 0.9rem; margin-bottom: 0.25rem; }
+.video-card-body span { font-size: 0.78rem; color: var(--text-muted); }
+.approfondissement-title {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 1.4rem;
+  color: var(--blue);
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--yellow);
+}
+  
   /* SORTIES */
   .releases-list { display: flex; flex-direction: column; gap: 1rem; }
   .release-item {
@@ -783,107 +896,25 @@
 </div>
 
 <!-- PAGE: APPRENDRE -->
-<div class="page active" id="page-apprendre" style="display:none;">
+<div class="page" id="page-apprendre" style="display:none;">
   <div class="section">
     <h2 class="section-title">Apprendre les rythmes</h2>
-    <p class="section-subtitle">Vidéos tutoriels pour débutants et pratiquants</p>
-    <div class="instruments-grid">
+    <p class="section-subtitle">Vidéos filmées par Nação Capoeira pour progresser à ton rythme</p>
 
-      <!-- BERIMBAU -->
-      <div class="instrument-card">
-        <div class="instrument-card-header">
-          <div class="instrument-icon">🎵</div>
-          <div>
-            <h3>Berimbau</h3>
-            <p>L'instrument principal de la capoeira</p>
-          </div>
-        </div>
-        <div class="instrument-card-body">
-          <ul class="video-list">
-            <li class="video-item" onclick="openVideo('Toque de Angola – Berimbau', 'https://www.youtube.com/results?search_query=berimbau+toque+angola+tutorial', 'Apprends le toque Angola, le rythme fondamental pour ouvrir une roda.')">
-              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
-              <div class="video-info"><strong>Toque Angola</strong><span>Rythme de base</span></div>
-              <span class="video-level level-debutant">Débutant</span>
-            </li>
-            <li class="video-item" onclick="openVideo('Toque São Bento Grande – Berimbau', 'https://www.youtube.com/results?search_query=berimbau+sao+bento+grande+tutorial', 'Le São Bento Grande est le rythme de la Regional, rapide et énergique.')">
-              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
-              <div class="video-info"><strong>Toque São Bento Grande</strong><span>Regional</span></div>
-              <span class="video-level level-inter">Intermédiaire</span>
-            </li>
-            <li class="video-item" onclick="openVideo('Cavalaria – Berimbau', 'https://www.youtube.com/results?search_query=berimbau+cavalaria+tutorial', 'La Cavalaria est le signal d'alerte – prévient de l'arrivée de la police historiquement.')">
-              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
-              <div class="video-info"><strong>Cavalaria</strong><span>Toque spécial</span></div>
-              <span class="video-level level-inter">Intermédiaire</span>
-            </li>
-            <li class="video-item" onclick="openVideo('Iúna – Berimbau', 'https://www.youtube.com/results?search_query=berimbau+iuna+tutorial', 'L'Iúna est réservé aux formés – le jogo le plus élevé.')">
-              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
-              <div class="video-info"><strong>Iúna</strong><span>Pour les formés</span></div>
-              <span class="video-level level-avance">Avancé</span>
-            </li>
-          </ul>
-        </div>
-      </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="setInstrumentTab('berimbau', this)">
+        <img src="berimbau.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;"> Berimbau
+      </button>
+      <button class="tab-btn" onclick="setInstrumentTab('atabaque', this)">
+        <img src="atabaque.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;"> Atabaque
+      </button>
+      <button class="tab-btn" onclick="setInstrumentTab('pandeiro', this)">
+        <img src="pandeiro.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;"> Pandeiro
+      </button>
+    </div>
 
-      <!-- ATABAQUE -->
-      <div class="instrument-card">
-        <div class="instrument-card-header">
-          <div class="instrument-icon">🥁</div>
-          <div>
-            <h3>Atabaque</h3>
-            <p>Le cœur percussif de la roda</p>
-          </div>
-        </div>
-        <div class="instrument-card-body">
-          <ul class="video-list">
-            <li class="video-item" onclick="openVideo('Rythme Angola – Atabaque', 'https://www.youtube.com/results?search_query=atabaque+capoeira+angola+tutorial', 'Le rythme de base pour accompagner le jogo Angola.')">
-              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
-              <div class="video-info"><strong>Rythme Angola</strong><span>Groove de base</span></div>
-              <span class="video-level level-debutant">Débutant</span>
-            </li>
-            <li class="video-item" onclick="openVideo('Rythme Regional – Atabaque', 'https://www.youtube.com/results?search_query=atabaque+capoeira+regional+tutorial', 'Plus rapide, pour la Regional et ses toques énergiques.')">
-              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
-              <div class="video-info"><strong>Rythme Regional</strong><span>Tempo rapide</span></div>
-              <span class="video-level level-debutant">Débutant</span>
-            </li>
-            <li class="video-item" onclick="openVideo('Improvisation – Atabaque', 'https://www.youtube.com/results?search_query=atabaque+capoeira+improvisation', 'Apprends à improviser et répondre au berimbau.')">
-              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
-              <div class="video-info"><strong>Improvisation</strong><span>Dialogue avec le berimbau</span></div>
-              <span class="video-level level-avance">Avancé</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- PANDEIRO -->
-      <div class="instrument-card">
-        <div class="instrument-card-header">
-          <div class="instrument-icon">🪘</div>
-          <div>
-            <h3>Pandeiro</h3>
-            <p>La couleur rythmique de l'orchestre</p>
-          </div>
-        </div>
-        <div class="instrument-card-body">
-          <ul class="video-list">
-            <li class="video-item" onclick="openVideo('Tenue et posture – Pandeiro', 'https://www.youtube.com/results?search_query=pandeiro+capoeira+debutant+tenue', 'Comment tenir et positionner le pandeiro pour bien sonner.')">
-              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
-              <div class="video-info"><strong>Tenue et posture</strong><span>Bases essentielles</span></div>
-              <span class="video-level level-debutant">Débutant</span>
-            </li>
-            <li class="video-item" onclick="openVideo('Rythme Angola – Pandeiro', 'https://www.youtube.com/results?search_query=pandeiro+capoeira+angola+rythme', 'Accompagnement pour le jogo Angola.')">
-              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
-              <div class="video-info"><strong>Rythme Angola</strong><span>Accompagnement</span></div>
-              <span class="video-level level-debutant">Débutant</span>
-            </li>
-            <li class="video-item" onclick="openVideo('Syncopation – Pandeiro', 'https://www.youtube.com/results?search_query=pandeiro+capoeira+syncopation+advanced', 'Techniques de syncopation avancées pour enrichir le son.')">
-              <div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#f0c040"/></svg></div>
-              <div class="video-info"><strong>Syncopation avancée</strong><span>Techniques expressives</span></div>
-              <span class="video-level level-avance">Avancé</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-
+    <div id="videos-content">
+      <div style="text-align:center;padding:3rem;color:#666;">Chargement des vidéos...</div>
     </div>
   </div>
 </div>
@@ -914,21 +945,23 @@
 
 
 <!-- MODAL VIDÉO -->
-<div class="modal-overlay" id="video-modal" onclick="closeModal('video-modal')">
-  <div class="modal-box" onclick="event.stopPropagation()">
+<div class="modal-overlay" id="video-modal" onclick="closeVideoModal()">
+  <div class="modal-box" style="max-width:780px;" onclick="event.stopPropagation()">
     <div class="modal-header">
       <h3 id="video-modal-title">Titre</h3>
-      <button class="modal-close" onclick="closeModal('video-modal')">×</button>
+      <button class="modal-close" onclick="closeVideoModal()">×</button>
     </div>
-    <div class="modal-body">
-      <div class="video-embed">
-        <div style="text-align:center;">
-          <div style="font-size:2rem;margin-bottom:0.5rem;">▶</div>
-          <div id="video-modal-link"></div>
-          <div style="margin-top:0.5rem;font-size:0.78rem;color:rgba(255,255,255,0.5);">Cliquer le lien pour ouvrir YouTube</div>
-        </div>
+    <div class="modal-body" style="padding:0;">
+      <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;">
+        <iframe id="video-modal-iframe"
+          style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
       </div>
-      <p class="video-desc" id="video-modal-desc"></p>
+      <div style="padding:1rem 1.5rem;">
+        <p class="video-desc" id="video-modal-desc"></p>
+      </div>
     </div>
   </div>
 </div>
@@ -1141,6 +1174,107 @@ document.addEventListener('keydown', e => {
   }
 });
 
+// ---- VIDEOS ----
+let videos = [];
+let currentInstrumentTab = 'berimbau';
+
+async function loadVideos() {
+  const { data, error } = await db
+    .from('videos')
+    .select('*')
+    .order('id', { ascending: true });
+  if (error) { console.error(error); return; }
+  videos = data;
+  renderVideos();
+}
+
+function setInstrumentTab(instrument, btn) {
+  currentInstrumentTab = instrument;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderVideos();
+}
+
+function getYoutubeId(url) {
+  const match = url.match(/(?:youtu\.be\/|watch\?v=|embed\/)([^#&?]{11})/);
+  return match ? match[1] : null;
+}
+
+function getThumb(url) {
+  const id = getYoutubeId(url);
+  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : '';
+}
+
+function renderVideos() {
+  const container = document.getElementById('videos-content');
+  if (!container) return;
+  const instrVideos = videos.filter(v => v.instrument === currentInstrumentTab);
+  const baseVideo = instrVideos.find(v => v.niveau === 'base');
+  const approVideos = instrVideos.filter(v => v.niveau === 'approfondissement');
+
+  let html = '';
+
+  if (baseVideo) {
+    const thumb = getThumb(baseVideo.youtube_url);
+    html += `
+    <div class="video-base-card" onclick="openYoutubeVideo('${baseVideo.youtube_url}', '${baseVideo.titre.replace(/'/g,"\\'")}', '${(baseVideo.description||'').replace(/'/g,"\\'")}')">
+      <div class="video-base-thumb">
+        ${thumb ? `<img src="${thumb}" alt="${baseVideo.titre}">` : ''}
+        <div class="video-play-overlay">
+          <svg width="22" height="22" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#00028e"/></svg>
+        </div>
+      </div>
+      <div class="video-base-info">
+        <div class="video-base-badge">Cours de base</div>
+        <h3>${baseVideo.titre}</h3>
+        <p>${baseVideo.description || ''}</p>
+      </div>
+    </div>`;
+  }
+
+  if (approVideos.length > 0) {
+    html += `<div class="approfondissement-title">Approfondissement</div>`;
+    html += `<div class="videos-grid">`;
+    approVideos.forEach(v => {
+      const thumb = getThumb(v.youtube_url);
+      html += `
+      <div class="video-card" onclick="openYoutubeVideo('${v.youtube_url}', '${v.titre.replace(/'/g,"\\'")}', '${(v.description||'').replace(/'/g,"\\'")}')">
+        <div class="video-card-thumb">
+          ${thumb ? `<img src="${thumb}" alt="${v.titre}">` : ''}
+          <div class="mini-play">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#00028e"/></svg>
+          </div>
+        </div>
+        <div class="video-card-body">
+          <strong>${v.titre}</strong>
+          <span>${v.description || ''}</span>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  if (!baseVideo && approVideos.length === 0) {
+    html = `<div style="text-align:center;padding:3rem;color:#999;">Aucune vidéo pour cet instrument pour l'instant.</div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+function openYoutubeVideo(url, title, desc) {
+  const id = getYoutubeId(url);
+  if (!id) return;
+  document.getElementById('video-modal-title').textContent = title;
+  document.getElementById('video-modal-desc').textContent = desc;
+  document.getElementById('video-modal-iframe').src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+  document.getElementById('video-modal').classList.add('open');
+}
+
+function closeVideoModal() {
+  document.getElementById('video-modal-iframe').src = '';
+  document.getElementById('video-modal').classList.remove('open');
+}
+
 // Init
 function toggleMenu() {
   document.getElementById('nav-links').classList.toggle('open');
@@ -1244,6 +1378,7 @@ function downloadPDF(id) {
 
 showPage('home');
 loadSongs();
+loadVideos();
 </script>
 </body>
 </html>
