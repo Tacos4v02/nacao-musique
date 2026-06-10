@@ -971,7 +971,7 @@
 
 <!-- MODAL PAROLES -->
 <div class="modal-overlay" id="lyrics-modal" onclick="closeModal('lyrics-modal')">
-  <div class="modal-box" onclick="event.stopPropagation()">
+  <div class="modal-box" style="max-width:720px;" onclick="event.stopPropagation()">
     <div class="modal-header">
       <h3 id="lyrics-modal-title">Paroles</h3>
       <button class="modal-close" onclick="closeModal('lyrics-modal')">×</button>
@@ -1148,16 +1148,17 @@ function openLyrics(id) {
   
   const videoSection = document.getElementById('lyrics-modal-video');
   if (song.videoUrl) {
+    const ytMatch = song.videoUrl.match(/(?:youtu\.be\/|watch\?v=|embed\/)([^#&?]{11})/);
+    const ytId = ytMatch ? ytMatch[1] : null;
     videoSection.style.display = 'block';
-    videoSection.innerHTML = `
-      <div style="margin-bottom:1rem;">
-        <a href="${song.videoUrl}" target="_blank" style="
-          display:inline-flex;align-items:center;gap:0.5rem;
-          background:var(--blue);color:var(--yellow);
-          padding:0.6rem 1.25rem;border-radius:6px;
-          text-decoration:none;font-weight:600;font-size:0.9rem;
-        ">▶ Voir la vidéo sur YouTube</a>
-      </div>`;
+    videoSection.innerHTML = ytId ? `
+      <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin-bottom:1rem;">
+        <iframe src="https://www.youtube.com/embed/${ytId}"
+          style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>` : '';
   } else {
     videoSection.style.display = 'none';
   }
