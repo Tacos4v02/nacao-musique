@@ -494,6 +494,15 @@
   .music-meta { font-size: 0.78rem; color: var(--text-muted); }
 
   /* PAROLES MODAL */
+
+    .refrain-block {
+    border-left: 3px solid var(--yellow);
+    background: var(--blue-pale);
+    padding: 0.5rem 0.85rem;
+    margin: 0.5rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+
   .lyrics-box {
     background: var(--gray);
     border-radius: 8px;
@@ -1134,7 +1143,10 @@ function openLyrics(id) {
     }).join('');
     document.getElementById('lyrics-modal-text').innerHTML = `<table style="width:100%;border-collapse:collapse;">${rows}</table>`;
   } else {
-    const formatted = song.lyrics.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+    let formatted = song.lyrics
+      .replace(/\[refrain\]([\s\S]*?)\[\/refrain\]/g, '<div class="refrain-block">$1</div>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n/g, '<br>');
     document.getElementById('lyrics-modal-text').innerHTML = formatted;
   }
   
