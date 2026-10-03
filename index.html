@@ -979,13 +979,6 @@
     <div class="modal-body">
       <div id="lyrics-modal-video" style="display:none;margin-bottom:1rem;"></div>
       <div class="lyrics-box" id="lyrics-modal-text"></div>
-      <div class="audio-player-box">
-        <span style="font-size:1.5rem;">🎵</span>
-        <div>
-          <div style="font-weight:600;margin-bottom:2px;" id="lyrics-modal-audio-title"></div>
-          <div class="audio-note">Audio disponible lors de l'ajout de fichiers par l'administrateur.</div>
-        </div>
-      </div>
     </div>
   </div>
 </div>
@@ -1144,7 +1137,6 @@ function openLyrics(id) {
     const formatted = song.lyrics.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
     document.getElementById('lyrics-modal-text').innerHTML = formatted;
   }
-    document.getElementById('lyrics-modal-audio-title').textContent = song.title;
   
   const videoSection = document.getElementById('lyrics-modal-video');
   if (song.videoUrl) {
