@@ -1133,11 +1133,20 @@ function openLyrics(id) {
     const frLines = song.translation.split('\n');
     const maxLen = Math.max(ptLines.length, frLines.length);
     const rows = Array.from({length: maxLen}, (_, i) => {
-      const pt = (ptLines[i] || '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      const fr = (frLines[i] || '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      let ptRaw = ptLines[i] || '';
+      let frRaw = frLines[i] || '';
+      let isRefrain = false;
+      if (ptRaw.includes('[refrain]') || ptRaw.includes('[/refrain]')) {
+        isRefrain = true;
+        ptRaw = ptRaw.replace(/\[\/?refrain\]/g, '');
+      }
+      frRaw = frRaw.replace(/\[\/?refrain\]/g, '');
+      const pt = ptRaw.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      const fr = frRaw.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      const bg = isRefrain ? 'background:var(--blue-pale);' : '';
       return `
-        <tr>
-          <td style="padding:4px 12px 4px 0;width:50%;vertical-align:top;color:#1a1a1a;">${pt}</td>
+        <tr style="${bg}">
+          <td style="padding:4px 12px 4px 10px;width:50%;vertical-align:top;color:#1a1a1a;${isRefrain ? 'border-left:3px solid var(--yellow);' : ''}">${pt}</td>
           <td style="padding:4px 0 4px 12px;width:50%;vertical-align:top;color:#666;border-left:2px solid #e0e0e0;padding-left:12px;">${fr}</td>
         </tr>`;
     }).join('');
