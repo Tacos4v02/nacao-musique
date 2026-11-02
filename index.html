@@ -243,80 +243,65 @@
   }
 
   /* ACCUEIL */
-  .carousel {
-    position: relative;
-    border-radius: var(--radius);
-    overflow: hidden;
-    background: #000;
-    aspect-ratio: 16/9;
-    max-width: 1000px;
-    margin: 0 auto;
-    touch-action: pan-y;
+  /* photos du carrousel en fond du bandeau */
+  .hero-slides {
+    position: absolute;
+    inset: 0;
   }
-  .carousel-track {
-    display: flex;
-    height: 100%;
-    transition: transform 0.5s ease;
-  }
-  .carousel-slide {
-    flex: 0 0 100%;
-    height: 100%;
-    position: relative;
-  }
-  .carousel-slide img {
+  .hero-slide {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
+    opacity: 0;
+    transform: scale(1);
+    transition: opacity 1.5s ease, transform 7s ease-out;
   }
-  .carousel-caption {
+  .hero-slide.active { opacity: 1; transform: scale(1.06); }
+  /* filtre bleu : plus opaque côté texte pour que les boutons restent bien lisibles */
+  .hero.has-photos .hero-slides::after {
+    content: '';
     position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 2.5rem 1.5rem 2.25rem;
-    background: linear-gradient(transparent, rgba(0,2,142,0.85));
-    color: var(--white);
-    font-weight: 600;
-    font-size: 1rem;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0,2,142,0.92) 0%, rgba(0,2,142,0.82) 45%, rgba(0,2,142,0.6) 100%);
   }
-  .carousel-btn {
+  .hero-text, .hero-mascot { z-index: 1; }
+  .hero-caption {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    border: none;
-    background: rgba(255,255,255,0.85);
-    color: var(--blue);
-    font-size: 1.8rem;
-    line-height: 1;
-    cursor: pointer;
-    transition: background 0.2s;
+    right: 1.25rem;
+    bottom: 0.9rem;
+    z-index: 1;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.8rem;
+    font-style: italic;
   }
-  .carousel-btn:hover { background: var(--yellow); }
-  .carousel-btn.prev { left: 12px; }
-  .carousel-btn.next { right: 12px; }
-  .carousel-dots {
+  .hero-dots {
     position: absolute;
-    bottom: 10px;
+    bottom: 1rem;
     left: 0;
     right: 0;
     display: flex;
     justify-content: center;
     gap: 8px;
+    z-index: 1;
+    pointer-events: none;
   }
-  .carousel-dot {
-    width: 10px;
-    height: 10px;
+  .hero-dot {
+    width: 9px;
+    height: 9px;
     border-radius: 50%;
     border: none;
     padding: 0;
-    background: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.4);
     cursor: pointer;
+    pointer-events: auto;
+    transition: background 0.3s;
   }
-  .carousel-dot.active { background: var(--yellow); }
+  .hero-dot.active { background: var(--yellow); }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-slide, .hero-slide.active { transform: none; transition: opacity 0.3s; }
+  }
 
   .annonces-list { display: flex; flex-direction: column; gap: 0.75rem; }
   .annonce {
@@ -756,9 +741,9 @@
   .section { padding: 2rem 1rem; }
   .videos-base-grid { grid-template-columns: 1fr; }
   .home-grid { grid-template-columns: 1fr; }
-  .carousel { aspect-ratio: 4/3; }
-  .carousel-btn { width: 36px; height: 36px; font-size: 1.4rem; }
-  .carousel-caption { padding: 2rem 1rem 2rem; font-size: 0.9rem; }
+  .hero.has-photos .hero-slides::after { background: rgba(0,2,142,0.84); }
+  .hero { padding-bottom: 3rem; }
+  .hero-caption { left: 0; right: 0; bottom: 2.1rem; text-align: center; }
   .hamburger { display: flex !important; }
   .nav-links {
     display: none !important;
@@ -840,6 +825,10 @@
 
 <!-- HERO (toujours visible) -->
 <div class="hero" id="hero">
+  <!-- photos du carrousel en fond, sous un filtre bleu (vide tant qu'il n'y a pas de photo) -->
+  <div class="hero-slides" id="hero-slides"></div>
+  <div class="hero-caption" id="hero-caption"></div>
+  <div class="hero-dots" id="hero-dots"></div>
   <div class="hero-text">
     <h1>Musiques de<br><span>Capoeira</span></h1>
     <p>Apprends les rythmes du berimbau, de l'atabaque et du pandeiro. Explore notre bibliothèque de chants et Chante !</p>
@@ -866,16 +855,6 @@
 
 <!-- SECTION HOME CONTENT -->
 <div id="home-content">
-
-  <!-- CARROUSEL (masqué tant qu'il n'y a pas de photo) -->
-  <div class="section" id="carousel-section" style="display:none;">
-    <div class="carousel" id="carousel">
-      <div class="carousel-track" id="carousel-track"></div>
-      <button class="carousel-btn prev" onclick="carouselGo(carouselIndex - 1)" aria-label="Photo précédente">‹</button>
-      <button class="carousel-btn next" onclick="carouselGo(carouselIndex + 1)" aria-label="Photo suivante">›</button>
-      <div class="carousel-dots" id="carousel-dots"></div>
-    </div>
-  </div>
 
   <!-- ANNONCES -->
   <div class="section" id="annonces-section" style="display:none;">
@@ -1461,53 +1440,39 @@ function todayISO() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-// Carrousel
+// Carrousel : les photos défilent en fondu dans le fond du bandeau bleu
 let carouselIndex = 0;
-let carouselCount = 0;
+let carouselPhotos = [];
 let carouselTimer = null;
 
 async function loadPhotos() {
   const { data, error } = await db.from('photos').select('*').order('id', { ascending: false });
   if (error) { console.error('Erreur chargement photos:', error); return; }
-  carouselCount = data.length;
-  if (!carouselCount) return;
-  document.getElementById('carousel-track').innerHTML = data.map((p, i) => `
-    <div class="carousel-slide">
-      <img src="${esc(p.image_url)}" alt="${esc(p.caption || 'Photo du groupe')}" ${i ? 'loading="lazy"' : ''}>
-      ${p.caption ? `<div class="carousel-caption">${esc(p.caption)}</div>` : ''}
-    </div>`).join('');
-  document.getElementById('carousel-dots').innerHTML = data.map((_, i) =>
-    `<button class="carousel-dot" onclick="carouselGo(${i})" aria-label="Photo ${i + 1}"></button>`).join('');
-  const single = carouselCount === 1;
-  document.querySelectorAll('.carousel-btn, .carousel-dots').forEach(el => el.style.display = single ? 'none' : '');
-  document.getElementById('carousel-section').style.display = '';
+  carouselPhotos = data;
+  if (!data.length) return;
+  document.getElementById('hero-slides').innerHTML = data.map(p =>
+    `<img class="hero-slide" src="${esc(p.image_url)}" alt="">`).join('');
+  if (data.length > 1) {
+    document.getElementById('hero-dots').innerHTML = data.map((_, i) =>
+      `<button class="hero-dot" onclick="carouselGo(${i})" aria-label="Photo ${i + 1}"></button>`).join('');
+  }
+  document.getElementById('hero').classList.add('has-photos');
   carouselGo(0);
 }
 
 function carouselGo(i) {
-  if (!carouselCount) return;
-  carouselIndex = (i + carouselCount) % carouselCount;
-  document.getElementById('carousel-track').style.transform = `translateX(-${carouselIndex * 100}%)`;
-  document.querySelectorAll('.carousel-dot').forEach((d, j) => d.classList.toggle('active', j === carouselIndex));
+  const count = carouselPhotos.length;
+  if (!count) return;
+  carouselIndex = (i + count) % count;
+  document.querySelectorAll('.hero-slide').forEach((s, j) => s.classList.toggle('active', j === carouselIndex));
+  document.querySelectorAll('.hero-dot').forEach((d, j) => d.classList.toggle('active', j === carouselIndex));
+  const caption = carouselPhotos[carouselIndex].caption;
+  document.getElementById('hero-caption').textContent = caption ? '📷 ' + caption : '';
   // défilement automatique, relancé à chaque changement de photo
   clearTimeout(carouselTimer);
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (carouselCount > 1 && !reduceMotion) carouselTimer = setTimeout(() => carouselGo(carouselIndex + 1), 5000);
+  if (count > 1 && !reduceMotion) carouselTimer = setTimeout(() => carouselGo(carouselIndex + 1), 6000);
 }
-
-(() => {
-  const carousel = document.getElementById('carousel');
-  let startX = null;
-  carousel.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
-  carousel.addEventListener('touchend', e => {
-    if (startX === null) return;
-    const dx = e.changedTouches[0].clientX - startX;
-    if (Math.abs(dx) > 40) carouselGo(carouselIndex + (dx < 0 ? 1 : -1));
-    startX = null;
-  });
-  carousel.addEventListener('mouseenter', () => clearTimeout(carouselTimer));
-  carousel.addEventListener('mouseleave', () => carouselGo(carouselIndex));
-})();
 
 // Annonces : celles sans date, et celles dont la date n'est pas passée
 async function loadAnnonces() {
