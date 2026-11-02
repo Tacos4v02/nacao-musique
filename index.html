@@ -367,22 +367,27 @@
 
   .cordes-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
     gap: 1rem;
   }
-  .corde {
+  .corde-groupe {
     border: 1px solid #e5e5e5;
+    border-top: 4px solid var(--yellow);
     border-radius: var(--radius);
-    padding: 1rem 1.25rem;
+    padding: 1rem 1rem 0.75rem;
   }
-  .corde-visual {
-    height: 14px;
-    border-radius: 7px;
-    margin-bottom: 0.75rem;
-    box-shadow: inset 0 -2px 0 rgba(0,0,0,0.15);
+  .corde-groupe h4 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+    color: var(--blue);
+    margin-bottom: 0.5rem;
   }
-  .corde h4 { font-size: 1rem; margin-bottom: 0.2rem; }
-  .corde p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+  .corde-groupe-cordes { display: flex; flex-wrap: wrap; gap: 0.25rem 0.5rem; }
+  .corde { width: 64px; text-align: center; }
+  .corde-svg { width: 56px; height: 91px; display: block; margin: 0 auto; }
+  .corde span { display: block; font-size: 0.68rem; line-height: 1.25; color: var(--text-muted); margin-top: 0.2rem; }
+  .corde-groupe p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin-top: 0.5rem; }
 
   .instrument-shortcuts { display: flex; gap: 0.75rem; flex-wrap: wrap; }
   .instrument-shortcut {
@@ -886,7 +891,7 @@
   <!-- CORDES -->
   <div class="section" id="cordes-section" style="display:none;">
     <h2 class="section-title">Les cordes du groupe</h2>
-    <p class="section-subtitle">Le système de graduation de Nação Capoeira</p>
+    <p class="section-subtitle">Graduation adulte Nação Capoeira</p>
     <div class="cordes-list" id="cordes-list"></div>
   </div>
 
@@ -1534,19 +1539,63 @@ async function loadCordes() {
   const { data, error } = await db.from('cordes').select('*').order('ordre', { ascending: true });
   if (error) { console.error('Erreur chargement cordes:', error); return; }
   if (!data.length) return;
-  document.getElementById('cordes-list').innerHTML = data.map(c => {
-    const color = v => /^#[0-9a-f]{3,8}$/i.test(v || '') ? v : null;
-    const c1 = color(c.couleur1) || '#cccccc';
-    const c2 = color(c.couleur2);
-    const bg = c2 ? `repeating-linear-gradient(135deg, ${c1} 0 10px, ${c2} 10px 20px)` : c1;
+  // regroupe les cordes par catégorie, dans l'ordre de la première corde de chaque catégorie
+  const groupes = [];
+  data.forEach(c => {
+    const nom = (c.categorie || '').trim();
+    let g = groupes.find(g => g.nom === nom);
+    if (!g) groupes.push(g = { nom, cordes: [] });
+    g.cordes.push(c);
+  });
+  document.getElementById('cordes-list').innerHTML = groupes.map(g => {
+    const descriptions = g.cordes.filter(c => c.description).map(c => formatText(c.description));
     return `
-    <div class="corde">
-      <div class="corde-visual" style="background:${bg};"></div>
-      <h4>${esc(c.nom)}</h4>
-      ${c.description ? `<p>${formatText(c.description)}</p>` : ''}
+    <div class="corde-groupe">
+      ${g.nom ? `<h4>${esc(g.nom)}</h4>` : ''}
+      <div class="corde-groupe-cordes">
+        ${g.cordes.map(c => `
+          <div class="corde" title="${esc(c.nom)}">
+            ${cordeSVG(c.couleur1, c.couleur2, c.id)}
+            <span>${esc(c.nom)}</span>
+          </div>`).join('')}
+      </div>
+      ${descriptions.length ? `<p>${descriptions.join('<br>')}</p>` : ''}
     </div>`;
   }).join('');
   document.getElementById('cordes-section').style.display = '';
+}
+
+// Dessine une corde nouée : tour de taille, nœud, deux brins avec franges.
+// Corde bicolore : le brin et la moitié gauche en couleur 1, le reste en couleur 2.
+function cordeSVG(couleur1, couleur2, id) {
+  const color = v => /^#[0-9a-f]{3,8}$/i.test(v || '') ? v : null;
+  const c1 = color(couleur1) || '#cccccc';
+  const c2 = color(couleur2) || c1;
+  const shadow = 'rgba(0,0,0,0.28)';
+  const left = 'M28 25 C27 50 24 70 22 90';
+  const right = 'M36 25 C37 50 40 70 42 90';
+  return `
+  <svg class="corde-svg" viewBox="0 0 64 104" aria-hidden="true">
+    <defs>
+      <linearGradient id="corde-noeud-${id}" x1="0" x2="1">
+        <stop offset="50%" stop-color="${c1}"/><stop offset="50%" stop-color="${c2}"/>
+      </linearGradient>
+    </defs>
+    <g fill="none" stroke-linecap="round">
+      <path d="M4 20 H60" stroke="${shadow}" stroke-width="9"/>
+      <path d="M4 20 H32" stroke="${c1}" stroke-width="7"/>
+      <path d="M32 20 H60" stroke="${c2}" stroke-width="7"/>
+      <path d="${left}" stroke="${shadow}" stroke-width="8"/>
+      <path d="${right}" stroke="${shadow}" stroke-width="8"/>
+      <path d="${left}" stroke="${c1}" stroke-width="6"/>
+      <path d="${right}" stroke="${c2}" stroke-width="6"/>
+      <path d="M4 20 H60 ${left} ${right}" stroke="rgba(255,255,255,0.35)" stroke-width="2" stroke-dasharray="2 4"/>
+      <path d="M22 90 l-3 10 M22 90 l0 11 M22 90 l3 10" stroke="${c1}" stroke-width="2"/>
+      <path d="M42 90 l-3 10 M42 90 l0 11 M42 90 l3 10" stroke="${c2}" stroke-width="2"/>
+    </g>
+    <ellipse cx="32" cy="21" rx="10" ry="9" fill="url(#corde-noeud-${id})" stroke="rgba(0,0,0,0.35)" stroke-width="1.5"/>
+    <path d="M25 17 Q32 25 39 17" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="1.5"/>
+  </svg>`;
 }
 
 // Chant du jour : le même pour tout le monde pendant la journée

@@ -49,6 +49,7 @@ create table if not exists public.cordes (
   description text,
   ordre int default 0
 );
+alter table public.cordes add column if not exists categorie text;  -- Débutants, Intermédiaires...
 
 create table if not exists public.club_info (
   key text primary key,
