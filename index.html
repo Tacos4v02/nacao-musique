@@ -572,7 +572,7 @@
     border-radius: 8px;
     padding: 1.25rem;
     font-size: 0.9rem;
-    line-height: 1.8;
+    line-height: 1.6;
     color: var(--text);
     white-space: normal;
     max-height: 300px;
@@ -1137,13 +1137,15 @@ function openLyrics(id) {
       const pt = bold(esc(ptObj.text));
       const fr = bold(esc(frObj.text));
       const refStyle = ptObj.isRefrain ? 'border-left:3px solid var(--yellow);background:var(--blue-pale);' : '';
+      // une ligne vide des deux côtés sépare deux couplets : on lui donne la hauteur d'une ligne
+      const gap = !ptObj.text.trim() && !frObj.text.trim() ? 'height:1.5em;' : '';
       return `
         <tr>
-          <td style="padding:4px 12px 4px 10px;width:50%;vertical-align:top;color:#1a1a1a;${refStyle}">${pt}</td>
-          <td style="padding:4px 0 4px 12px;width:50%;vertical-align:top;color:#666;border-left:2px solid #e0e0e0;padding-left:12px;">${fr}</td>
+          <td style="padding:2px 12px 2px 10px;width:50%;vertical-align:top;color:#1a1a1a;${gap}${refStyle}">${pt}</td>
+          <td style="padding:2px 0 2px 12px;width:50%;vertical-align:top;color:#666;border-left:2px solid #e0e0e0;padding-left:12px;${gap}">${fr}</td>
         </tr>`;
     }).join('');
-    document.getElementById('lyrics-modal-text').innerHTML = `<table style="width:100%;border-collapse:collapse;">${rows}</table>`;
+    document.getElementById('lyrics-modal-text').innerHTML = `<table style="width:100%;border-collapse:collapse;line-height:1.5;">${rows}</table>`;
     
   } else {
     let html = '';
