@@ -82,7 +82,7 @@
     align-items: center;
     justify-content: center;
     gap: 4rem;
-    min-height: 420px;
+    min-height: clamp(520px, 75vh, 760px);
     position: relative;
     overflow: hidden;
   }
@@ -251,14 +251,23 @@
   .hero-slide {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    overflow: hidden;
     opacity: 0;
     transform: scale(1);
     transition: opacity 1.5s ease, transform 7s ease-out;
   }
   .hero-slide.active { opacity: 1; transform: scale(1.06); }
+  .hero-slide img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* mode "photo entière" : la photo est visible en entier, le fond est la même photo floutée */
+  .hero-slide.entiere.active { transform: none; }
+  .hero-slide.entiere .slide-bg { filter: blur(24px); transform: scale(1.15); }
+  .hero-slide.entiere .slide-fg { object-fit: contain; }
   /* filtre bleu : plus opaque côté texte pour que les boutons restent bien lisibles */
   .hero.has-photos .hero-slides::after {
     content: '';
@@ -1450,8 +1459,15 @@ async function loadPhotos() {
   if (error) { console.error('Erreur chargement photos:', error); return; }
   carouselPhotos = data;
   if (!data.length) return;
-  document.getElementById('hero-slides').innerHTML = data.map(p =>
-    `<img class="hero-slide" src="${esc(p.image_url)}" alt="">`).join('');
+  document.getElementById('hero-slides').innerHTML = data.map(p => {
+    const src = esc(p.image_url);
+    if (p.mode === 'entiere') {
+      return `<div class="hero-slide entiere"><img class="slide-bg" src="${src}" alt=""><img class="slide-fg" src="${src}" alt=""></div>`;
+    }
+    // mode "remplir" : la photo couvre le bandeau, centrée sur la zone choisie dans l'admin
+    const cadrage = /^\d{1,3}(\.\d+)?% \d{1,3}(\.\d+)?%$/.test(p.cadrage || '') ? p.cadrage : '50% 50%';
+    return `<div class="hero-slide"><img src="${src}" alt="" style="object-position:${cadrage};"></div>`;
+  }).join('');
   if (data.length > 1) {
     document.getElementById('hero-dots').innerHTML = data.map((_, i) =>
       `<button class="hero-dot" onclick="carouselGo(${i})" aria-label="Photo ${i + 1}"></button>`).join('');

@@ -29,6 +29,9 @@ create table if not exists public.photos (
   path text,                      -- chemin du fichier dans le stockage (pour le supprimer)
   created_at timestamptz default now()
 );
+-- affichage dans le bandeau : 'remplir' (recadrée sur le point "cadrage") ou 'entiere' (sur fond flouté)
+alter table public.photos add column if not exists mode text not null default 'remplir';
+alter table public.photos add column if not exists cadrage text not null default '50% 50%';
 
 create table if not exists public.annonces (
   id bigint generated always as identity primary key,
