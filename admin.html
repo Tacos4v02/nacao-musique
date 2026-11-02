@@ -315,7 +315,6 @@
   .pv-slide img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .pv-slide.entiere .slide-bg { filter: blur(12px); transform: scale(1.15); }
   .pv-slide.entiere .slide-fg { object-fit: contain; }
-  .corde-svg { width: 30px; height: 49px; flex-shrink: 0; }
 
   @media (max-width: 600px) {
     nav { padding: 0 1rem; }
@@ -434,50 +433,6 @@
         <div class="form-error" id="i-form-error"></div>
       </div>
 
-      <div class="separator"></div>
-
-      <div class="section-title">Cordes du groupe</div>
-      <div class="form-card">
-        <h2>Nouvelle corde</h2>
-        <p class="form-hint">Les cordes s'affichent dans l'ordre croissant du champ « Ordre » (1 = première corde), regroupées par catégorie (Débutants, Intermédiaires...).</p>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Catégorie</label>
-            <input type="text" id="c-categorie" list="c-categories" placeholder="Ex: Débutants">
-            <datalist id="c-categories"></datalist>
-          </div>
-          <div class="form-group">
-            <label>Nom</label>
-            <input type="text" id="c-nom" placeholder="Ex: Vert / Jaune">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Couleur</label>
-            <input type="color" id="c-couleur1" value="#f0c040">
-          </div>
-          <div class="form-group">
-            <label class="checkbox-label"><input type="checkbox" id="c-deux" onchange="document.getElementById('c-couleur2').disabled = !this.checked"> Deuxième couleur</label>
-            <input type="color" id="c-couleur2" value="#00028e" disabled>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Ordre</label>
-            <input type="number" id="c-ordre" value="1" min="0">
-          </div>
-          <div class="form-group">
-            <label>Description (optionnel)</label>
-            <input type="text" id="c-description" placeholder="Ex: Première année">
-          </div>
-        </div>
-        <button class="btn-submit" id="c-submit-btn" onclick="addCorde()">Ajouter la corde</button>
-        <div class="form-success" id="c-form-success">✓ Corde ajoutée !</div>
-        <div class="form-error" id="c-form-error"></div>
-      </div>
-      <div class="songs-list" id="cordes-list">
-        <div class="empty">Chargement...</div>
-      </div>
     </div>
 
     <!-- ===== ONGLET VIDÉOS ===== -->
@@ -686,7 +641,6 @@
     loadPhotos();
     loadAnnonces();
     loadPresentation();
-    loadCordes();
     loadSongs();
     loadVideos();
   }
@@ -923,92 +877,6 @@
     btn.disabled = false;
     if (error) { showMsg(errorEl, 'Erreur : ' + error.message); return; }
     showMsg(successEl);
-  }
-
-  // ---- CORDES ----
-  async function loadCordes() {
-    const { data, error } = await db.from('cordes').select('*').order('ordre', { ascending: true });
-    const list = document.getElementById('cordes-list');
-    if (error) { list.innerHTML = `<div class="empty">Erreur : ${esc(error.message)}</div>`; return; }
-    if (!data.length) { list.innerHTML = '<div class="empty">Aucune corde pour l\'instant.</div>'; return; }
-    const categories = [...new Set(data.map(c => (c.categorie || '').trim()).filter(Boolean))];
-    document.getElementById('c-categories').innerHTML = categories.map(c => `<option value="${esc(c)}">`).join('');
-    document.getElementById('c-ordre').value = Math.max(...data.map(c => c.ordre || 0)) + 1;
-    list.innerHTML = data.map(c => `
-      <div class="song-row" id="crow-${c.id}">
-        ${cordeSVG(c.couleur1, c.couleur2, c.id)}
-        <div class="song-row-info">
-          <strong>${c.ordre}. ${esc(c.nom)}</strong>
-          <span>${esc(c.categorie || 'Sans catégorie')}${c.description ? ' — ' + esc(c.description) : ''}</span>
-        </div>
-        <button class="btn-delete" onclick="deleteCorde(${c.id})">Supprimer</button>
-      </div>`).join('');
-  }
-
-  // Même dessin que sur le site (index.html) : tour de taille, nœud, deux brins avec franges
-  function cordeSVG(couleur1, couleur2, id) {
-    const color = v => /^#[0-9a-f]{3,8}$/i.test(v || '') ? v : null;
-    const c1 = color(couleur1) || '#cccccc';
-    const c2 = color(couleur2) || c1;
-    const shadow = 'rgba(0,0,0,0.28)';
-    const left = 'M28 25 C27 50 24 70 22 90';
-    const right = 'M36 25 C37 50 40 70 42 90';
-    return `
-    <svg class="corde-svg" viewBox="0 0 64 104" aria-hidden="true">
-      <defs>
-        <linearGradient id="corde-noeud-${id}" x1="0" x2="1">
-          <stop offset="50%" stop-color="${c1}"/><stop offset="50%" stop-color="${c2}"/>
-        </linearGradient>
-      </defs>
-      <g fill="none" stroke-linecap="round">
-        <path d="M4 20 H60" stroke="${shadow}" stroke-width="9"/>
-        <path d="M4 20 H32" stroke="${c1}" stroke-width="7"/>
-        <path d="M32 20 H60" stroke="${c2}" stroke-width="7"/>
-        <path d="${left}" stroke="${shadow}" stroke-width="8"/>
-        <path d="${right}" stroke="${shadow}" stroke-width="8"/>
-        <path d="${left}" stroke="${c1}" stroke-width="6"/>
-        <path d="${right}" stroke="${c2}" stroke-width="6"/>
-        <path d="M4 20 H60 ${left} ${right}" stroke="rgba(255,255,255,0.35)" stroke-width="2" stroke-dasharray="2 4"/>
-        <path d="M22 90 l-3 10 M22 90 l0 11 M22 90 l3 10" stroke="${c1}" stroke-width="2"/>
-        <path d="M42 90 l-3 10 M42 90 l0 11 M42 90 l3 10" stroke="${c2}" stroke-width="2"/>
-      </g>
-      <ellipse cx="32" cy="21" rx="10" ry="9" fill="url(#corde-noeud-${id})" stroke="rgba(0,0,0,0.35)" stroke-width="1.5"/>
-      <path d="M25 17 Q32 25 39 17" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="1.5"/>
-    </svg>`;
-  }
-
-  async function addCorde() {
-    const nom = document.getElementById('c-nom').value.trim();
-    const categorie = document.getElementById('c-categorie').value.trim();
-    const ordre = parseInt(document.getElementById('c-ordre').value, 10) || 0;
-    const couleur1 = document.getElementById('c-couleur1').value;
-    const couleur2 = document.getElementById('c-deux').checked ? document.getElementById('c-couleur2').value : null;
-    const description = document.getElementById('c-description').value.trim();
-    const successEl = document.getElementById('c-form-success');
-    const errorEl = document.getElementById('c-form-error');
-    const btn = document.getElementById('c-submit-btn');
-    successEl.style.display = 'none';
-    errorEl.style.display = 'none';
-
-    if (!nom) { showMsg(errorEl, 'Le nom est obligatoire.'); return; }
-
-    btn.disabled = true;
-    const { error } = await db.from('cordes').insert([{ nom, categorie: categorie || null, ordre, couleur1, couleur2, description: description || null }]);
-    btn.disabled = false;
-    if (error) { showMsg(errorEl, 'Erreur : ' + error.message); return; }
-
-    showMsg(successEl);
-    document.getElementById('c-nom').value = '';
-    document.getElementById('c-description').value = '';
-    document.getElementById('c-ordre').value = ordre + 1;
-    loadCordes();
-  }
-
-  async function deleteCorde(id) {
-    if (!confirm('Supprimer cette corde ?')) return;
-    const { data, error } = await db.from('cordes').delete().eq('id', id).select('id');
-    if (writeFailed(error, data)) return;
-    document.getElementById('crow-' + id).remove();
   }
 
   // ---- VIDÉOS ----
