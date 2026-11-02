@@ -24,6 +24,7 @@
     align-items:center;
     justify-content:center;
     background:#0a1a3d;
+    padding: 1rem;
   }
   .login-box {
     background:#fff;
@@ -63,6 +64,7 @@
     display:flex;
     align-items:center;
     justify-content:space-between;
+    gap: 1rem;
   }
   nav span {
     font-family:'Bebas Neue',cursive;
@@ -70,6 +72,8 @@
     color:#f0c040;
     letter-spacing:2px;
   }
+  .nav-right { display:flex; align-items:center; gap:1rem; }
+  .nav-user { color:rgba(255,255,255,0.7); font-size:0.85rem; }
   nav button {
     background: none;
     border: 1.5px solid rgba(255,255,255,0.3);
@@ -82,6 +86,32 @@
     font-weight: 600;
   }
   nav button:hover { border-color: #f0c040; color: #f0c040; }
+
+  /* ONGLETS */
+  .admin-tabs {
+    display: flex;
+    gap: 0.5rem;
+    max-width: 900px;
+    margin: 1.5rem auto 0;
+    padding: 0 2rem;
+    flex-wrap: wrap;
+  }
+  .admin-tab {
+    background: #e8eef8;
+    color: #0a1a3d;
+    border: none;
+    padding: 0.5rem 1.25rem;
+    border-radius: 30px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .admin-tab.active, .admin-tab:hover { background: #0a1a3d; color: #f0c040; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
 
   .admin-content {
     max-width: 900px;
@@ -97,6 +127,7 @@
     padding-left: 1rem;
     margin-bottom: 2rem;
   }
+  .separator { margin: 2rem 0; height:1px; background:#e0e0e0; }
 
   /* FORMULAIRE */
   .form-card {
@@ -113,6 +144,7 @@
     letter-spacing: 1px;
     margin-bottom: 1.5rem;
   }
+  .form-hint { font-size: 0.82rem; color: #666; margin: -1rem 0 1.25rem; line-height: 1.5; }
   .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -143,7 +175,17 @@
     color: #1a1a1a;
   }
   input:focus, select:focus, textarea:focus { border-color: #0a1a3d; }
+  input[type="color"] { padding: 0.2rem; height: 44px; width: 100%; cursor: pointer; }
   textarea { resize: vertical; min-height: 140px; }
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-transform: none;
+    font-weight: 400;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
   .btn-submit {
     background: #f0c040;
     color: #0a1a3d;
@@ -185,7 +227,7 @@
     align-items: center;
     gap: 1rem;
   }
-  .song-row-info { flex: 1; }
+  .song-row-info { flex: 1; min-width: 0; }
   .song-row-info strong { display: block; font-size: 0.95rem; }
   .song-row-info span { font-size: 0.8rem; color: #666; }
   .genre-tag {
@@ -199,7 +241,8 @@
   .tag-angola { background: #fff3e0; color: #bf5100; }
   .tag-regional { background: #e3f2fd; color: #0d47a1; }
   .tag-ladainha { background: #e8f5e9; color: #1b5e20; }
-  
+  .tag-past { background: #eee; color: #888; }
+
   .btn-edit {
     background: none;
     border: 1.5px solid #e0e0e0;
@@ -213,7 +256,7 @@
     flex-shrink: 0;
   }
   .btn-edit:hover { background: #e8eef8; border-color: #0a1a3d; }
-  
+
   .btn-delete {
     background: none;
     border: 1.5px solid #e0e0e0;
@@ -228,6 +271,36 @@
   }
   .btn-delete:hover { background: #fde8e8; border-color: #c0392b; }
   .empty { text-align: center; color: #999; padding: 2rem; font-size: 0.9rem; }
+
+  /* PHOTOS */
+  .photos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .photos-grid .empty { grid-column: 1 / -1; }
+  .photo-item {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .photo-item img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+  .photo-item-body { padding: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  .photo-item-body input { font-size: 0.85rem; padding: 0.45rem 0.7rem; }
+  .corde-preview { width: 90px; height: 12px; border-radius: 6px; flex-shrink: 0; }
+
+  @media (max-width: 600px) {
+    nav { padding: 0 1rem; }
+    .nav-user { display: none; }
+    .admin-tabs { padding: 0 1rem; }
+    .admin-content { padding: 1.5rem 1rem; }
+    .form-card { padding: 1.25rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .song-row { flex-wrap: wrap; }
+  }
 </style>
 </head>
 <body>
@@ -237,9 +310,10 @@
   <div class="login-box">
     <h1>Nação Admin</h1>
     <p>Accès réservé aux administrateurs</p>
-    <input type="password" id="password-input" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')login()">
-    <div class="login-error" id="login-error">Mot de passe incorrect.</div>
-    <button class="btn-submit" onclick="login()">Entrer</button>
+    <input type="email" id="email-input" placeholder="E-mail" autocomplete="username">
+    <input type="password" id="password-input" placeholder="Mot de passe" autocomplete="current-password" onkeydown="if(event.key==='Enter')login()">
+    <div class="login-error" id="login-error">E-mail ou mot de passe incorrect.</div>
+    <button class="btn-submit" id="login-btn" onclick="login()">Entrer</button>
   </div>
 </div>
 
@@ -247,268 +321,649 @@
 <div class="admin-screen" id="admin-screen">
   <nav>
     <span>Nação Admin</span>
-    <button onclick="logout()">Déconnexion</button>
+    <div class="nav-right">
+      <span class="nav-user" id="nav-user"></span>
+      <button onclick="logout()">Déconnexion</button>
+    </div>
   </nav>
 
+  <div class="admin-tabs">
+    <button class="admin-tab active" data-tab="accueil" onclick="showTab('accueil')">Accueil</button>
+    <button class="admin-tab" data-tab="chants" onclick="showTab('chants')">Chants</button>
+    <button class="admin-tab" data-tab="videos" onclick="showTab('videos')">Vidéos</button>
+  </div>
+
   <div class="admin-content">
-    <div class="section-title">Ajouter une vidéo</div>
 
-    <div class="form-card">
-      <h2>Nouvelle vidéo</h2>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Instrument</label>
-          <select id="v-instrument">
-            <option value="berimbau">Berimbau</option>
-            <option value="atabaque">Atabaque</option>
-            <option value="pandeiro">Pandeiro</option>
-          </select>
+    <!-- ===== ONGLET ACCUEIL ===== -->
+    <div class="tab-panel active" id="tab-accueil">
+
+      <div class="section-title">Photos du carrousel</div>
+      <div class="form-card">
+        <h2>Ajouter des photos</h2>
+        <p class="form-hint">Les photos sont redimensionnées automatiquement avant l'envoi. Tu peux en sélectionner plusieurs à la fois.</p>
+        <div class="form-row">
+          <div class="form-group full">
+            <label>Photos</label>
+            <input type="file" id="p-files" accept="image/jpeg,image/png,image/webp" multiple>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Niveau</label>
-          <select id="v-niveau">
-            <option value="base">Cours de base</option>
-            <option value="approfondissement">Approfondissement</option>
-          </select>
+        <div class="form-row">
+          <div class="form-group full">
+            <label>Légende (optionnel)</label>
+            <input type="text" id="p-caption" placeholder="Ex: Batizado 2026">
+          </div>
         </div>
+        <button class="btn-submit" id="p-submit-btn" onclick="addPhotos()">Envoyer</button>
+        <div class="form-success" id="p-form-success"></div>
+        <div class="form-error" id="p-form-error"></div>
       </div>
-      <div class="form-row">
-        <div class="form-group full">
-          <label>Titre</label>
-          <input type="text" id="v-titre" placeholder="Ex: Rythme de base – Berimbau">
-        </div>
+      <div class="photos-grid" id="photos-list">
+        <div class="empty">Chargement...</div>
       </div>
-      <div class="form-row">
-        <div class="form-group full">
-          <label>Lien YouTube</label>
-          <input type="text" id="v-url" placeholder="https://www.youtube.com/watch?v=...">
+
+      <div class="separator"></div>
+
+      <div class="section-title">Annonces</div>
+      <div class="form-card">
+        <h2>Nouvelle annonce</h2>
+        <p class="form-hint">Une annonce avec une date disparaît de l'accueil le lendemain. Sans date, elle reste jusqu'à ce que tu la supprimes.</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Titre</label>
+            <input type="text" id="a-titre" placeholder="Ex: Roda de fin d'année">
+          </div>
+          <div class="form-group">
+            <label>Date (optionnel)</label>
+            <input type="date" id="a-date">
+          </div>
         </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group full">
-          <label>Description (optionnel)</label>
-          <input type="text" id="v-desc" placeholder="Courte description de la vidéo">
+        <div class="form-row">
+          <div class="form-group full">
+            <label>Texte (optionnel)</label>
+            <textarea id="a-texte" style="min-height:90px;" placeholder="Lieu, horaire, ce qu'il faut apporter..."></textarea>
+          </div>
         </div>
+        <button class="btn-submit" id="a-submit-btn" onclick="addAnnonce()">Publier l'annonce</button>
+        <div class="form-success" id="a-form-success">✓ Annonce publiée !</div>
+        <div class="form-error" id="a-form-error"></div>
       </div>
-      <button class="btn-submit" id="v-submit-btn" onclick="addVideo()">Ajouter la vidéo</button>
-      <div class="form-success" id="v-form-success">✓ Vidéo ajoutée !</div>
-      <div class="form-error" id="v-form-error"></div>
+      <div class="songs-list" id="annonces-list">
+        <div class="empty">Chargement...</div>
+      </div>
+
+      <div class="separator"></div>
+
+      <div class="section-title">Présentation du groupe</div>
+      <div class="form-card">
+        <h2>Texte de présentation</h2>
+        <p class="form-hint">Affiché sur l'accueil à côté du chant du jour. Mets du texte entre **étoiles** pour le passer en gras. Laisse vide pour masquer le bloc.</p>
+        <div class="form-row">
+          <div class="form-group full">
+            <textarea id="i-presentation" style="min-height:180px;"></textarea>
+          </div>
+        </div>
+        <button class="btn-submit" id="i-submit-btn" onclick="savePresentation()">Sauvegarder</button>
+        <div class="form-success" id="i-form-success">✓ Présentation enregistrée !</div>
+        <div class="form-error" id="i-form-error"></div>
+      </div>
+
+      <div class="separator"></div>
+
+      <div class="section-title">Cordes du groupe</div>
+      <div class="form-card">
+        <h2>Nouvelle corde</h2>
+        <p class="form-hint">Les cordes s'affichent dans l'ordre croissant du champ « Ordre » (1 = première corde).</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nom</label>
+            <input type="text" id="c-nom" placeholder="Ex: Corde crue">
+          </div>
+          <div class="form-group">
+            <label>Ordre</label>
+            <input type="number" id="c-ordre" value="1" min="0">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Couleur</label>
+            <input type="color" id="c-couleur1" value="#f0c040">
+          </div>
+          <div class="form-group">
+            <label class="checkbox-label"><input type="checkbox" id="c-deux" onchange="document.getElementById('c-couleur2').disabled = !this.checked"> Deuxième couleur</label>
+            <input type="color" id="c-couleur2" value="#00028e" disabled>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group full">
+            <label>Description (optionnel)</label>
+            <input type="text" id="c-description" placeholder="Ex: Débutant, première année">
+          </div>
+        </div>
+        <button class="btn-submit" id="c-submit-btn" onclick="addCorde()">Ajouter la corde</button>
+        <div class="form-success" id="c-form-success">✓ Corde ajoutée !</div>
+        <div class="form-error" id="c-form-error"></div>
+      </div>
+      <div class="songs-list" id="cordes-list">
+        <div class="empty">Chargement...</div>
+      </div>
     </div>
 
-    <div class="section-title">Vidéos existantes</div>
-    <div class="songs-list" id="videos-list">
-      <div class="empty">Chargement...</div>
+    <!-- ===== ONGLET VIDÉOS ===== -->
+    <div class="tab-panel" id="tab-videos">
+      <div class="section-title">Ajouter une vidéo</div>
+
+      <div class="form-card">
+        <h2>Nouvelle vidéo</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Instrument</label>
+            <select id="v-instrument">
+              <option value="berimbau">Berimbau</option>
+              <option value="atabaque">Atabaque</option>
+              <option value="pandeiro">Pandeiro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Niveau</label>
+            <select id="v-niveau">
+              <option value="base">Cours de base</option>
+              <option value="approfondissement">Approfondissement</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group full">
+            <label>Titre</label>
+            <input type="text" id="v-titre" placeholder="Ex: Rythme de base – Berimbau">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group full">
+            <label>Lien YouTube</label>
+            <input type="text" id="v-url" placeholder="https://www.youtube.com/watch?v=...">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group full">
+            <label>Description (optionnel)</label>
+            <input type="text" id="v-desc" placeholder="Courte description de la vidéo">
+          </div>
+        </div>
+        <button class="btn-submit" id="v-submit-btn" onclick="addVideo()">Ajouter la vidéo</button>
+        <div class="form-success" id="v-form-success">✓ Vidéo ajoutée !</div>
+        <div class="form-error" id="v-form-error"></div>
+      </div>
+
+      <div class="section-title">Vidéos existantes</div>
+      <div class="songs-list" id="videos-list">
+        <div class="empty">Chargement...</div>
+      </div>
     </div>
 
-    <div style="margin: 2rem 0;height:1px;background:#e0e0e0;"></div>
-    
-    <div class="section-title">Ajouter une musique</div>
+    <!-- ===== ONGLET CHANTS ===== -->
+    <div class="tab-panel" id="tab-chants">
+      <div class="section-title">Ajouter une musique</div>
 
-    <div class="form-card">
-      <h2>Nouvelle musique</h2>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Titre</label>
-          <input type="text" id="f-title" placeholder="Ex: Paranauê">
+      <div class="form-card">
+        <h2>Nouvelle musique</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Titre</label>
+            <input type="text" id="f-title" placeholder="Ex: Paranauê">
+          </div>
+          <div class="form-group">
+            <label>Genre</label>
+            <select id="f-genre">
+              <option value="angola">Angola</option>
+              <option value="regional">Regional</option>
+              <option value="ladainha">Ladainha</option>
+            </select>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Genre</label>
-          <select id="f-genre">
-            <option value="angola">Angola</option>
-            <option value="regional">Regional</option>
-            <option value="ladainha">Ladainha</option>
-          </select>
+        <div class="form-row">
+          <div class="form-group full">
+            <label>Description (artiste, style...)</label>
+            <input type="text" id="f-meta" placeholder="Ex: Corrido – Mestre Bimba">
+          </div>
         </div>
+        <div class="form-row">
+          <div class="form-group full">
+            <label>Lien vidéo YouTube (optionnel)</label>
+            <input type="text" id="f-video" placeholder="https://www.youtube.com/watch?v=...">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group full">
+            <label>Paroles (Portugais)</label>
+            <textarea id="f-lyrics" placeholder="Colle les paroles en portugais..."></textarea>
+          </div>
+          <div class="form-group full">
+            <label>Traduction (Français)</label>
+            <textarea id="f-translation" placeholder="Colle la traduction ligne par ligne..."></textarea>
+          </div>
+        </div>
+        <button class="btn-submit" id="submit-btn" onclick="addSong()">Ajouter la musique</button>
+        <div class="form-success" id="form-success">✓ Musique ajoutée avec succès !</div>
+        <div class="form-error" id="form-error"></div>
       </div>
-      <div class="form-row">
-        <div class="form-group full">
-          <label>Description (artiste, style...)</label>
-          <input type="text" id="f-meta" placeholder="Ex: Corrido – Mestre Bimba">
+
+      <div class="form-card" id="edit-card" style="display:none;border-left:4px solid #f0c040;">
+        <h2>Modifier la musique</h2>
+        <input type="hidden" id="e-id">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Titre</label>
+            <input type="text" id="e-title">
+          </div>
+          <div class="form-group">
+            <label>Genre</label>
+            <select id="e-genre">
+              <option value="angola">Angola</option>
+              <option value="regional">Regional</option>
+              <option value="ladainha">Ladainha</option>
+            </select>
+          </div>
         </div>
+        <div class="form-row">
+          <div class="form-group full">
+            <label>Description</label>
+            <input type="text" id="e-meta">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group full">
+            <label>Lien vidéo YouTube (optionnel)</label>
+            <input type="text" id="e-video">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group full">
+            <label>Paroles (Portugais)</label>
+            <textarea id="e-lyrics"></textarea>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group full">
+            <label>Traduction (Français)</label>
+            <textarea id="e-translation"></textarea>
+          </div>
+        </div>
+        <div style="display:flex;gap:1rem;margin-top:0.5rem;">
+          <button class="btn-submit" id="edit-btn" onclick="saveEdit()">Sauvegarder</button>
+          <button class="btn-submit" style="background:#e0e0e0;color:#444;" onclick="cancelEdit()">Annuler</button>
+        </div>
+        <div class="form-success" id="edit-success">✓ Musique modifiée !</div>
+        <div class="form-error" id="edit-error"></div>
       </div>
-      <div class="form-row">
-        <div class="form-group full">
-          <label>Lien vidéo YouTube (optionnel)</label>
-          <input type="text" id="f-video" placeholder="https://www.youtube.com/watch?v=...">
-        </div>
+
+      <div class="section-title">Musiques existantes</div>
+      <div class="songs-list" id="songs-list">
+        <div class="empty">Chargement...</div>
       </div>
-      <div class="form-row">
-        <div class="form-group full">
-          <label>Paroles (Portugais)</label>
-          <textarea id="f-lyrics" placeholder="Colle les paroles en portugais..."></textarea>
-        </div>
-        <div class="form-group full">
-          <label>Traduction (Français)</label>
-          <textarea id="f-translation" placeholder="Colle la traduction ligne par ligne..."></textarea>
-        </div>
-      </div>
-      <button class="btn-submit" id="submit-btn" onclick="addSong()">Ajouter la musique</button>
-      <div class="form-success" id="form-success">✓ Musique ajoutée avec succès !</div>
-      <div class="form-error" id="form-error"></div>
     </div>
 
-    <div class="form-card" id="edit-card" style="display:none;border-left:4px solid #f0c040;">
-      <h2>Modifier la musique</h2>
-      <input type="hidden" id="e-id">
-      <div class="form-row">
-        <div class="form-group">
-          <label>Titre</label>
-          <input type="text" id="e-title">
-        </div>
-        <div class="form-group">
-          <label>Genre</label>
-          <select id="e-genre">
-            <option value="angola">Angola</option>
-            <option value="regional">Regional</option>
-            <option value="ladainha">Ladainha</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group full">
-          <label>Description</label>
-          <input type="text" id="e-meta">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group full">
-          <label>Lien vidéo YouTube (optionnel)</label>
-          <input type="text" id="e-video">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group full">
-          <label>Paroles (Portugais)</label>
-          <textarea id="e-lyrics"></textarea>
-        </div>
-      </div>
-    <div class="form-row">
-        <div class="form-group full">
-          <label>Traduction (Français)</label>
-          <textarea id="e-translation"></textarea>
-        </div>
-      </div>
-      <div style="display:flex;gap:1rem;margin-top:0.5rem;">
-        <button class="btn-submit" id="edit-btn" onclick="saveEdit()">Sauvegarder</button>
-        <button class="btn-submit" style="background:#e0e0e0;color:#444;" onclick="cancelEdit()">Annuler</button>
-      </div>
-      <div class="form-success" id="edit-success">✓ Musique modifiée !</div>
-      <div class="form-error" id="edit-error"></div>
-    </div>
-
-    <div class="section-title">Musiques existantes</div>
-    <div class="songs-list" id="songs-list">
-      <div class="empty">Chargement...</div>
-    </div>
   </div>
 </div>
 
 <script>
-  const MOT_DE_PASSE = 'nacao94';
-
   function esc(str) {
     return String(str ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
-  async function loadVideos() {
-  const { data, error } = await db
-    .from('videos')
-    .select('*')
-    .order('id', { ascending: true });
-
-  const list = document.getElementById('videos-list');
-  if (error || !data || !data.length) {
-    list.innerHTML = '<div class="empty">Aucune vidéo pour l\'instant.</div>';
-    return;
+  function showMsg(el, text) {
+    if (text) el.textContent = text;
+    el.style.display = 'block';
   }
 
-  const instrLabel = { berimbau: 'Berimbau', atabaque: 'Atabaque', pandeiro: 'Pandeiro' };
-  const niveauLabel = { base: 'Base', approfondissement: 'Approfondissement' };
-
-  list.innerHTML = data.map(v => `
-    <div class="song-row" id="vrow-${v.id}">
-      <div class="song-row-info">
-        <strong>${esc(v.titre)}</strong>
-        <span>${instrLabel[v.instrument]} — ${niveauLabel[v.niveau]}</span>
-      </div>
-      <span class="genre-tag tag-regional">${instrLabel[v.instrument]}</span>
-      <button class="btn-delete" onclick="deleteVideo(${v.id})">Supprimer</button>
-    </div>`).join('');
-}
-
-async function addVideo() {
-  const instrument = document.getElementById('v-instrument').value;
-  const niveau = document.getElementById('v-niveau').value;
-  const titre = document.getElementById('v-titre').value.trim();
-  const youtube_url = document.getElementById('v-url').value.trim();
-  const description = document.getElementById('v-desc').value.trim();
-
-  const successEl = document.getElementById('v-form-success');
-  const errorEl = document.getElementById('v-form-error');
-  const btn = document.getElementById('v-submit-btn');
-
-  successEl.style.display = 'none';
-  errorEl.style.display = 'none';
-
-  if (!titre || !youtube_url) {
-    errorEl.textContent = 'Titre et lien YouTube sont obligatoires.';
-    errorEl.style.display = 'block';
-    return;
+  // Supabase ne renvoie pas d'erreur quand les règles de sécurité bloquent une suppression :
+  // il ne supprime simplement rien. On vérifie donc qu'une ligne a bien été touchée.
+  function writeFailed(error, data) {
+    if (error) { alert('Erreur : ' + error.message); return true; }
+    if (!data || !data.length) { alert("Action refusée : ton compte n'a pas les droits admin."); return true; }
+    return false;
   }
 
-  btn.disabled = true;
-  btn.textContent = 'Ajout en cours...';
-
-  const { error } = await db.from('videos').insert([{
-    instrument, niveau, titre, youtube_url, description: description || null
-  }]);
-
-  btn.disabled = false;
-  btn.textContent = 'Ajouter la vidéo';
-
-  if (error) {
-    errorEl.textContent = 'Erreur : ' + error.message;
-    errorEl.style.display = 'block';
-    return;
-  }
-
-  successEl.style.display = 'block';
-  document.getElementById('v-titre').value = '';
-  document.getElementById('v-url').value = '';
-  document.getElementById('v-desc').value = '';
-  loadVideos();
-}
-
-async function deleteVideo(id) {
-  if (!confirm('Supprimer cette vidéo ?')) return;
-  const { error } = await db.from('videos').delete().eq('id', id);
-  if (!error) document.getElementById('vrow-' + id).remove();
-}
-  
-  function login() {
-    const val = document.getElementById('password-input').value;
-    if (val === MOT_DE_PASSE) {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('admin-screen').style.display = 'block';
-      loadSongs();
-      loadVideos();
-    } else {
-      document.getElementById('login-error').style.display = 'block';
+  // ---- CONNEXION ----
+  async function login() {
+    const email = document.getElementById('email-input').value.trim();
+    const password = document.getElementById('password-input').value;
+    const errorEl = document.getElementById('login-error');
+    const btn = document.getElementById('login-btn');
+    errorEl.style.display = 'none';
+    btn.disabled = true;
+    const { data, error } = await db.auth.signInWithPassword({ email, password });
+    btn.disabled = false;
+    if (error) {
+      showMsg(errorEl, 'E-mail ou mot de passe incorrect.');
+      return;
     }
+    showAdmin(data.session);
   }
 
-  function logout() {
+  async function logout() {
+    await db.auth.signOut();
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('admin-screen').style.display = 'none';
     document.getElementById('password-input').value = '';
   }
+
+  function showAdmin(session) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-screen').style.display = 'block';
+    document.getElementById('nav-user').textContent = session.user.email;
+    loadPhotos();
+    loadAnnonces();
+    loadPresentation();
+    loadCordes();
+    loadSongs();
+    loadVideos();
+  }
+
+  function showTab(name) {
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
+  }
+
+  // ---- PHOTOS ----
+  async function loadPhotos() {
+    const { data, error } = await db.from('photos').select('*').order('id', { ascending: false });
+    const list = document.getElementById('photos-list');
+    if (error) { list.innerHTML = `<div class="empty">Erreur : ${esc(error.message)}</div>`; return; }
+    if (!data.length) { list.innerHTML = '<div class="empty">Aucune photo pour l\'instant.</div>'; return; }
+    list.innerHTML = data.map(p => `
+      <div class="photo-item" id="prow-${p.id}">
+        <img src="${esc(p.image_url)}" alt="" loading="lazy">
+        <div class="photo-item-body">
+          <input type="text" value="${esc(p.caption)}" placeholder="Légende" onchange="updateCaption(${p.id}, this)">
+          <button class="btn-delete" onclick="deletePhoto(${p.id}, '${esc(p.path)}')">Supprimer</button>
+        </div>
+      </div>`).join('');
+  }
+
+  // Réduit l'image (max 1600 px) et la convertit en JPEG pour limiter la place prise
+  async function resizeImage(file, maxSize = 1600) {
+    const img = await createImageBitmap(file, { imageOrientation: 'from-image' });
+    const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(img.width * scale);
+    canvas.height = Math.round(img.height * scale);
+    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+    return new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.85));
+  }
+
+  async function addPhotos() {
+    const files = [...document.getElementById('p-files').files];
+    const caption = document.getElementById('p-caption').value.trim();
+    const successEl = document.getElementById('p-form-success');
+    const errorEl = document.getElementById('p-form-error');
+    const btn = document.getElementById('p-submit-btn');
+    successEl.style.display = 'none';
+    errorEl.style.display = 'none';
+
+    if (!files.length) { showMsg(errorEl, 'Choisis au moins une photo.'); return; }
+
+    btn.disabled = true;
+    let sent = 0;
+    for (const file of files) {
+      btn.textContent = `Envoi ${sent + 1}/${files.length}...`;
+      try {
+        const blob = await resizeImage(file);
+        const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
+        const up = await db.storage.from('photos').upload(path, blob, { contentType: 'image/jpeg' });
+        if (up.error) throw up.error;
+        const image_url = db.storage.from('photos').getPublicUrl(path).data.publicUrl;
+        const { error } = await db.from('photos').insert([{ image_url, caption: caption || null, path }]);
+        if (error) {
+          await db.storage.from('photos').remove([path]);
+          throw error;
+        }
+        sent++;
+      } catch (e) {
+        showMsg(errorEl, `Erreur sur « ${file.name} » : ${e.message}`);
+        break;
+      }
+    }
+    btn.disabled = false;
+    btn.textContent = 'Envoyer';
+    if (sent) {
+      showMsg(successEl, `✓ ${sent} photo${sent > 1 ? 's' : ''} ajoutée${sent > 1 ? 's' : ''} !`);
+      document.getElementById('p-files').value = '';
+      document.getElementById('p-caption').value = '';
+    }
+    loadPhotos();
+  }
+
+  async function updateCaption(id, input) {
+    const { data, error } = await db.from('photos').update({ caption: input.value.trim() || null }).eq('id', id).select('id');
+    input.style.borderColor = (error || !data.length) ? '#c0392b' : '#2d7a3e';
+  }
+
+  async function deletePhoto(id, path) {
+    if (!confirm('Supprimer cette photo ?')) return;
+    const { data, error } = await db.from('photos').delete().eq('id', id).select('id');
+    if (writeFailed(error, data)) return;
+    if (path) await db.storage.from('photos').remove([path]);
+    document.getElementById('prow-' + id).remove();
+  }
+
+  // ---- ANNONCES ----
+  async function loadAnnonces() {
+    const { data, error } = await db.from('annonces').select('*')
+      .order('date_evenement', { ascending: false, nullsFirst: true });
+    const list = document.getElementById('annonces-list');
+    if (error) { list.innerHTML = `<div class="empty">Erreur : ${esc(error.message)}</div>`; return; }
+    if (!data.length) { list.innerHTML = '<div class="empty">Aucune annonce pour l\'instant.</div>'; return; }
+    const d = new Date();
+    const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    list.innerHTML = data.map(a => {
+      const past = a.date_evenement && a.date_evenement < today;
+      const dateLabel = a.date_evenement
+        ? new Date(a.date_evenement + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+        : 'Sans date';
+      return `
+      <div class="song-row" id="arow-${a.id}">
+        <div class="song-row-info">
+          <strong>${esc(a.titre)}</strong>
+          <span>${dateLabel}</span>
+        </div>
+        ${past ? '<span class="genre-tag tag-past">Passée</span>' : ''}
+        <button class="btn-delete" onclick="deleteAnnonce(${a.id})">Supprimer</button>
+      </div>`;
+    }).join('');
+  }
+
+  async function addAnnonce() {
+    const titre = document.getElementById('a-titre').value.trim();
+    const date_evenement = document.getElementById('a-date').value || null;
+    const texte = document.getElementById('a-texte').value.trim();
+    const successEl = document.getElementById('a-form-success');
+    const errorEl = document.getElementById('a-form-error');
+    const btn = document.getElementById('a-submit-btn');
+    successEl.style.display = 'none';
+    errorEl.style.display = 'none';
+
+    if (!titre) { showMsg(errorEl, 'Le titre est obligatoire.'); return; }
+
+    btn.disabled = true;
+    const { error } = await db.from('annonces').insert([{ titre, date_evenement, texte: texte || null }]);
+    btn.disabled = false;
+    if (error) { showMsg(errorEl, 'Erreur : ' + error.message); return; }
+
+    showMsg(successEl);
+    document.getElementById('a-titre').value = '';
+    document.getElementById('a-date').value = '';
+    document.getElementById('a-texte').value = '';
+    loadAnnonces();
+  }
+
+  async function deleteAnnonce(id) {
+    if (!confirm('Supprimer cette annonce ?')) return;
+    const { data, error } = await db.from('annonces').delete().eq('id', id).select('id');
+    if (writeFailed(error, data)) return;
+    document.getElementById('arow-' + id).remove();
+  }
+
+  // ---- PRÉSENTATION ----
+  async function loadPresentation() {
+    const { data } = await db.from('club_info').select('value').eq('key', 'presentation').maybeSingle();
+    document.getElementById('i-presentation').value = (data && data.value) || '';
+  }
+
+  async function savePresentation() {
+    const value = document.getElementById('i-presentation').value.trim();
+    const successEl = document.getElementById('i-form-success');
+    const errorEl = document.getElementById('i-form-error');
+    const btn = document.getElementById('i-submit-btn');
+    successEl.style.display = 'none';
+    errorEl.style.display = 'none';
+    btn.disabled = true;
+    const { error } = await db.from('club_info').upsert({ key: 'presentation', value });
+    btn.disabled = false;
+    if (error) { showMsg(errorEl, 'Erreur : ' + error.message); return; }
+    showMsg(successEl);
+  }
+
+  // ---- CORDES ----
+  async function loadCordes() {
+    const { data, error } = await db.from('cordes').select('*').order('ordre', { ascending: true });
+    const list = document.getElementById('cordes-list');
+    if (error) { list.innerHTML = `<div class="empty">Erreur : ${esc(error.message)}</div>`; return; }
+    if (!data.length) { list.innerHTML = '<div class="empty">Aucune corde pour l\'instant.</div>'; return; }
+    const color = v => /^#[0-9a-f]{3,8}$/i.test(v || '') ? v : null;
+    list.innerHTML = data.map(c => {
+      const c1 = color(c.couleur1) || '#cccccc';
+      const c2 = color(c.couleur2);
+      const bg = c2 ? `repeating-linear-gradient(135deg, ${c1} 0 8px, ${c2} 8px 16px)` : c1;
+      return `
+      <div class="song-row" id="crow-${c.id}">
+        <div class="corde-preview" style="background:${bg};"></div>
+        <div class="song-row-info">
+          <strong>${c.ordre}. ${esc(c.nom)}</strong>
+          <span>${esc(c.description)}</span>
+        </div>
+        <button class="btn-delete" onclick="deleteCorde(${c.id})">Supprimer</button>
+      </div>`;
+    }).join('');
+  }
+
+  async function addCorde() {
+    const nom = document.getElementById('c-nom').value.trim();
+    const ordre = parseInt(document.getElementById('c-ordre').value, 10) || 0;
+    const couleur1 = document.getElementById('c-couleur1').value;
+    const couleur2 = document.getElementById('c-deux').checked ? document.getElementById('c-couleur2').value : null;
+    const description = document.getElementById('c-description').value.trim();
+    const successEl = document.getElementById('c-form-success');
+    const errorEl = document.getElementById('c-form-error');
+    const btn = document.getElementById('c-submit-btn');
+    successEl.style.display = 'none';
+    errorEl.style.display = 'none';
+
+    if (!nom) { showMsg(errorEl, 'Le nom est obligatoire.'); return; }
+
+    btn.disabled = true;
+    const { error } = await db.from('cordes').insert([{ nom, ordre, couleur1, couleur2, description: description || null }]);
+    btn.disabled = false;
+    if (error) { showMsg(errorEl, 'Erreur : ' + error.message); return; }
+
+    showMsg(successEl);
+    document.getElementById('c-nom').value = '';
+    document.getElementById('c-description').value = '';
+    document.getElementById('c-ordre').value = ordre + 1;
+    loadCordes();
+  }
+
+  async function deleteCorde(id) {
+    if (!confirm('Supprimer cette corde ?')) return;
+    const { data, error } = await db.from('cordes').delete().eq('id', id).select('id');
+    if (writeFailed(error, data)) return;
+    document.getElementById('crow-' + id).remove();
+  }
+
+  // ---- VIDÉOS ----
+  async function loadVideos() {
+    const { data, error } = await db
+      .from('videos')
+      .select('*')
+      .order('id', { ascending: true });
+
+    const list = document.getElementById('videos-list');
+    if (error || !data || !data.length) {
+      list.innerHTML = '<div class="empty">Aucune vidéo pour l\'instant.</div>';
+      return;
+    }
+
+    const instrLabel = { berimbau: 'Berimbau', atabaque: 'Atabaque', pandeiro: 'Pandeiro' };
+    const niveauLabel = { base: 'Base', approfondissement: 'Approfondissement' };
+
+    list.innerHTML = data.map(v => `
+      <div class="song-row" id="vrow-${v.id}">
+        <div class="song-row-info">
+          <strong>${esc(v.titre)}</strong>
+          <span>${instrLabel[v.instrument]} — ${niveauLabel[v.niveau]}</span>
+        </div>
+        <span class="genre-tag tag-regional">${instrLabel[v.instrument]}</span>
+        <button class="btn-delete" onclick="deleteVideo(${v.id})">Supprimer</button>
+      </div>`).join('');
+  }
+
+  async function addVideo() {
+    const instrument = document.getElementById('v-instrument').value;
+    const niveau = document.getElementById('v-niveau').value;
+    const titre = document.getElementById('v-titre').value.trim();
+    const youtube_url = document.getElementById('v-url').value.trim();
+    const description = document.getElementById('v-desc').value.trim();
+
+    const successEl = document.getElementById('v-form-success');
+    const errorEl = document.getElementById('v-form-error');
+    const btn = document.getElementById('v-submit-btn');
+
+    successEl.style.display = 'none';
+    errorEl.style.display = 'none';
+
+    if (!titre || !youtube_url) {
+      showMsg(errorEl, 'Titre et lien YouTube sont obligatoires.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Ajout en cours...';
+
+    const { error } = await db.from('videos').insert([{
+      instrument, niveau, titre, youtube_url, description: description || null
+    }]);
+
+    btn.disabled = false;
+    btn.textContent = 'Ajouter la vidéo';
+
+    if (error) {
+      showMsg(errorEl, 'Erreur : ' + error.message);
+      return;
+    }
+
+    showMsg(successEl);
+    document.getElementById('v-titre').value = '';
+    document.getElementById('v-url').value = '';
+    document.getElementById('v-desc').value = '';
+    loadVideos();
+  }
+
+  async function deleteVideo(id) {
+    if (!confirm('Supprimer cette vidéo ?')) return;
+    const { data, error } = await db.from('videos').delete().eq('id', id).select('id');
+    if (writeFailed(error, data)) return;
+    document.getElementById('vrow-' + id).remove();
+  }
+
+  // ---- CHANTS ----
+  let allSongs = [];
 
   async function loadSongs() {
     const { data, error } = await db
       .from('songs')
       .select('*')
       .order('id', { ascending: false });
-    allSongs = data;
+    allSongs = data || [];
     const list = document.getElementById('songs-list');
     if (error || !data.length) {
       list.innerHTML = '<div class="empty">Aucune musique pour l\'instant.</div>';
@@ -546,30 +1001,26 @@ async function deleteVideo(id) {
     errorEl.style.display = 'none';
 
     if (!title || !genre || !lyrics) {
-      errorEl.textContent = 'Titre, genre et paroles sont obligatoires.';
-      errorEl.style.display = 'block';
+      showMsg(errorEl, 'Titre, genre et paroles sont obligatoires.');
       return;
     }
 
     btn.disabled = true;
     btn.textContent = 'Ajout en cours...';
 
-    const { data, error } = await db.from('songs').insert([{
+    const { error } = await db.from('songs').insert([{
       title, genre, meta, lyrics, translation: translation || null, video_url: video_url || null
-    }], { returning: 'minimal' });
-    console.log('data:', data);
-    console.log('error:', error);
+    }]);
 
     btn.disabled = false;
     btn.textContent = 'Ajouter la musique';
 
     if (error) {
-      errorEl.textContent = 'Erreur : ' + error.message;
-      errorEl.style.display = 'block';
+      showMsg(errorEl, 'Erreur : ' + error.message);
       return;
     }
 
-    successEl.style.display = 'block';
+    showMsg(successEl);
     document.getElementById('f-title').value = '';
     document.getElementById('f-meta').value = '';
     document.getElementById('f-lyrics').value = '';
@@ -578,68 +1029,71 @@ async function deleteVideo(id) {
     loadSongs();
   }
 
-  let allSongs = [];
-
-function editSong(id) {
-  const song = allSongs.find(s => s.id === id);
-  if (!song) return;
-  document.getElementById('e-id').value = song.id;
-  document.getElementById('e-title').value = song.title;
-  document.getElementById('e-genre').value = song.genre;
-  document.getElementById('e-meta').value = song.meta || '';
-  document.getElementById('e-video').value = song.video_url || '';
-  document.getElementById('e-lyrics').value = song.lyrics || '';
-  document.getElementById('e-translation').value = song.translation || '';
-  document.getElementById('edit-card').style.display = 'block';
-  document.getElementById('edit-card').scrollIntoView({ behavior: 'smooth' });
-}
-
-function cancelEdit() {
-  document.getElementById('edit-card').style.display = 'none';
-}
-
-async function saveEdit() {
-  const id = document.getElementById('e-id').value;
-  const title = document.getElementById('e-title').value.trim();
-  const genre = document.getElementById('e-genre').value;
-  const meta = document.getElementById('e-meta').value.trim();
-  const lyrics = document.getElementById('e-lyrics').value.trim();
-  const translation = document.getElementById('e-translation').value.trim();
-  const video_url = document.getElementById('e-video').value.trim();
-
-  const btn = document.getElementById('edit-btn');
-  const successEl = document.getElementById('edit-success');
-  const errorEl = document.getElementById('edit-error');
-  successEl.style.display = 'none';
-  errorEl.style.display = 'none';
-  btn.disabled = true;
-  btn.textContent = 'Sauvegarde...';
-
-  const { error } = await db.from('songs').update({
-    title, genre, meta, lyrics,
-    translation: translation || null,
-    video_url: video_url || null
-  }).eq('id', id);
-
-  btn.disabled = false;
-  btn.textContent = 'Sauvegarder';
-
-  if (error) {
-    errorEl.textContent = 'Erreur : ' + error.message;
-    errorEl.style.display = 'block';
-    return;
+  function editSong(id) {
+    const song = allSongs.find(s => s.id === id);
+    if (!song) return;
+    document.getElementById('e-id').value = song.id;
+    document.getElementById('e-title').value = song.title;
+    document.getElementById('e-genre').value = song.genre;
+    document.getElementById('e-meta').value = song.meta || '';
+    document.getElementById('e-video').value = song.video_url || '';
+    document.getElementById('e-lyrics').value = song.lyrics || '';
+    document.getElementById('e-translation').value = song.translation || '';
+    document.getElementById('edit-card').style.display = 'block';
+    document.getElementById('edit-card').scrollIntoView({ behavior: 'smooth' });
   }
 
-  successEl.style.display = 'block';
-  document.getElementById('edit-card').style.display = 'none';
-  loadSongs();
-}
-  
+  function cancelEdit() {
+    document.getElementById('edit-card').style.display = 'none';
+  }
+
+  async function saveEdit() {
+    const id = document.getElementById('e-id').value;
+    const title = document.getElementById('e-title').value.trim();
+    const genre = document.getElementById('e-genre').value;
+    const meta = document.getElementById('e-meta').value.trim();
+    const lyrics = document.getElementById('e-lyrics').value.trim();
+    const translation = document.getElementById('e-translation').value.trim();
+    const video_url = document.getElementById('e-video').value.trim();
+
+    const btn = document.getElementById('edit-btn');
+    const successEl = document.getElementById('edit-success');
+    const errorEl = document.getElementById('edit-error');
+    successEl.style.display = 'none';
+    errorEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Sauvegarde...';
+
+    const { data, error } = await db.from('songs').update({
+      title, genre, meta, lyrics,
+      translation: translation || null,
+      video_url: video_url || null
+    }).eq('id', id).select('id');
+
+    btn.disabled = false;
+    btn.textContent = 'Sauvegarder';
+
+    if (error || !data.length) {
+      showMsg(errorEl, 'Erreur : ' + (error ? error.message : 'modification refusée (droits admin ?)'));
+      return;
+    }
+
+    showMsg(successEl);
+    document.getElementById('edit-card').style.display = 'none';
+    loadSongs();
+  }
+
   async function deleteSong(id) {
     if (!confirm('Supprimer cette musique ?')) return;
-    const { error } = await db.from('songs').delete().eq('id', id);
-    if (!error) document.getElementById('row-' + id).remove();
+    const { data, error } = await db.from('songs').delete().eq('id', id).select('id');
+    if (writeFailed(error, data)) return;
+    document.getElementById('row-' + id).remove();
   }
+
+  // Reste connecté entre deux visites
+  db.auth.getSession().then(({ data }) => {
+    if (data.session) showAdmin(data.session);
+  });
 </script>
 </body>
 </html>
