@@ -406,6 +406,10 @@
 <script>
   const MOT_DE_PASSE = 'nacao94';
 
+  function esc(str) {
+    return String(str ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
   async function loadVideos() {
   const { data, error } = await db
     .from('videos')
@@ -424,7 +428,7 @@
   list.innerHTML = data.map(v => `
     <div class="song-row" id="vrow-${v.id}">
       <div class="song-row-info">
-        <strong>${v.titre}</strong>
+        <strong>${esc(v.titre)}</strong>
         <span>${instrLabel[v.instrument]} — ${niveauLabel[v.niveau]}</span>
       </div>
       <span class="genre-tag tag-regional">${instrLabel[v.instrument]}</span>
@@ -516,8 +520,8 @@ async function deleteVideo(id) {
       return `
       <div class="song-row" id="row-${s.id}">
         <div class="song-row-info">
-          <strong>${s.title}</strong>
-          <span>${s.meta}</span>
+          <strong>${esc(s.title)}</strong>
+          <span>${esc(s.meta)}</span>
         </div>
         <span class="genre-tag ${tagClass}">${tagLabel}</span>
         <button class="btn-edit" onclick="editSong(${s.id})">Modifier</button>

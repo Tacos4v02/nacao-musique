@@ -516,17 +516,6 @@
     margin-bottom: 1rem;
     font-style: italic;
   }
-  .audio-player-box {
-    background: var(--blue);
-    border-radius: 8px;
-    padding: 1rem 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    color: var(--white);
-    font-size: 0.9rem;
-  }
-  .audio-note { color: rgba(255,255,255,0.6); font-size: 0.82rem; }
 
   /* VIDEOS */
 .video-base-card {
@@ -587,6 +576,12 @@
   border-radius: 20px;
   margin-bottom: 0.5rem;
 }
+.videos-base-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
 .videos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -644,35 +639,6 @@
   border-left: 3px solid var(--yellow);
 }
   
-  /* SORTIES */
-  .releases-list { display: flex; flex-direction: column; gap: 1rem; }
-  .release-item {
-    background: var(--white);
-    border: 1px solid #e5e5e5;
-    border-radius: var(--radius);
-    padding: 1.25rem 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    transition: box-shadow 0.2s;
-  }
-  .release-item:hover { box-shadow: 0 4px 16px rgba(26,58,107,0.08); }
-  .release-new {
-    background: var(--yellow);
-    color: var(--blue);
-    font-size: 0.72rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 3px 8px;
-    border-radius: 20px;
-    flex-shrink: 0;
-  }
-  .release-info { flex: 1; }
-  .release-info h4 { font-size: 1rem; font-weight: 600; margin-bottom: 2px; }
-  .release-info p { font-size: 0.82rem; color: var(--text-muted); }
-  .release-date { font-size: 0.8rem; color: var(--text-muted); flex-shrink: 0; }
-  .release-genre { font-size: 0.72rem; font-weight: 600; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; }
 
   /* EMPTY / FILTER STATES */
   .no-results {
@@ -700,6 +666,7 @@
   .hero-text h1 { font-size: 2.8rem; }
   nav { padding: 0 1rem; }
   .section { padding: 2rem 1rem; }
+  .videos-base-grid { grid-template-columns: 1fr; }
   .hamburger { display: flex !important; }
   .nav-links {
     display: none !important;
@@ -814,7 +781,7 @@
     <div class="instruments-grid">
 
       <!-- BERIMBAU -->
-      <div class="instrument-card" style="cursor:pointer;" onclick="openVideo('Toque de Base – Berimbau', 'https://www.youtube.com/results?search_query=berimbau+toque+angola+tutorial', 'Apprends le toque Angola, le rythme fondamental pour ouvrir une roda.')">
+      <div class="instrument-card" style="cursor:pointer;" onclick="goToInstrument('berimbau')">
         <div class="instrument-card-header">
           <div class="instrument-icon">
             <img src="berimbau.png" style="width:30px;height:30px;object-fit:contain;">
@@ -842,7 +809,7 @@
       </div>
 
       <!-- ATABAQUE -->
-      <div class="instrument-card" style="cursor:pointer;" onclick="openVideo('Rythme de Base – Atabaque', 'https://www.youtube.com/results?search_query=atabaque+capoeira+angola+tutorial', 'Le rythme de base pour accompagner le jogo Angola.')">
+      <div class="instrument-card" style="cursor:pointer;" onclick="goToInstrument('atabaque')">
         <div class="instrument-card-header">
           <div class="instrument-icon">
             <img src="atabaque.png" style="width:30px;height:30px;object-fit:contain;">
@@ -870,7 +837,7 @@
       </div>
 
       <!-- PANDEIRO -->
-      <div class="instrument-card" style="cursor:pointer;" onclick="openVideo('Rythme de Base – Pandeiro', 'https://www.youtube.com/results?search_query=pandeiro+capoeira+debutant+tenue', 'Comment tenir et positionner le pandeiro pour bien sonner.')">
+      <div class="instrument-card" style="cursor:pointer;" onclick="goToInstrument('pandeiro')">
         <div class="instrument-card-header">
           <div class="instrument-icon">
             <img src="pandeiro.png" style="width:30px;height:30px;object-fit:contain;">
@@ -914,13 +881,13 @@
     <p class="section-subtitle">Vidéos filmées par Nação Capoeira l'Hay pour progresser à ton rythme</p>
 
     <div class="tabs">
-      <button class="tab-btn active" onclick="setInstrumentTab('berimbau', this)">
+      <button class="tab-btn active" data-instrument="berimbau" onclick="setInstrumentTab('berimbau', this)">
         <img src="berimbau.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;"> Berimbau
       </button>
-      <button class="tab-btn" onclick="setInstrumentTab('atabaque', this)">
+      <button class="tab-btn" data-instrument="atabaque" onclick="setInstrumentTab('atabaque', this)">
         <img src="atabaque.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;"> Atabaque
       </button>
-      <button class="tab-btn" onclick="setInstrumentTab('pandeiro', this)">
+      <button class="tab-btn" data-instrument="pandeiro" onclick="setInstrumentTab('pandeiro', this)">
         <img src="pandeiro.png" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;"> Pandeiro
       </button>
     </div>
@@ -952,9 +919,6 @@
     <div class="no-results" id="no-results" style="display:none;">Aucun chant trouvé pour ce filtre.</div>
   </div>
 </div>
-
-<!-- PAGE: SORTIES -->
-
 
 <!-- MODAL VIDÉO -->
 <div class="modal-overlay" id="video-modal" onclick="closeVideoModal()">
@@ -1024,11 +988,13 @@ async function loadSongs() {
   filterMusic();
 }
 
-let favorites = JSON.parse(localStorage.getItem('nacao_favs') || '[]');
+// localStorage peut être bloqué (navigation privée...) : on ne doit pas planter le site
+let favorites = [];
+try { favorites = JSON.parse(localStorage.getItem('nacao_favs') || '[]'); } catch (e) {}
 let currentGenre = 'all';
 
 function saveFavs() {
-  localStorage.setItem('nacao_favs', JSON.stringify(favorites));
+  try { localStorage.setItem('nacao_favs', JSON.stringify(favorites)); } catch (e) {}
 }
 
 function toggleFav(id, btn) {
@@ -1061,8 +1027,8 @@ function filterMusic() {
   }
   if (q) {
     filtered = filtered.filter(s =>
-      s.title.toLowerCase().includes(q) ||
-      s.meta.toLowerCase().includes(q)
+      (s.title || '').toLowerCase().includes(q) ||
+      (s.meta || '').toLowerCase().includes(q)
     );
   }
   renderMusic(filtered);
@@ -1084,14 +1050,14 @@ function renderMusic(list) {
     return `
     <div class="music-card" style="cursor:pointer;" onclick="openLyrics(${s.id})">
       <div class="music-card-top">
-        <h4>${s.title}</h4>
-        <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFav(${s.id}, this)" title="Ajouter aux favoris">♥</button>
+        <h4>${esc(s.title)}</h4>
+        <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation();toggleFav(${s.id}, this)" title="Ajouter aux favoris">♥</button>
       </div>
       <div><span class="genre-tag ${tagClass}">${tagLabel}</span></div>
-      <div class="music-meta">${s.meta}</div>
+      <div class="music-meta">${esc(s.meta)}</div>
       <div class="music-actions">
-        <button class="action-btn" onclick="openLyrics(${s.id})">📜 Paroles</button>
-        <button class="action-btn" onclick="downloadPDF(${s.id})">📄 PDF</button>
+        <button class="action-btn" onclick="event.stopPropagation();openLyrics(${s.id})">📜 Paroles</button>
+        <button class="action-btn" onclick="event.stopPropagation();downloadPDF(${s.id})">📄 PDF</button>
       </div>
     </div>`;
   }).join('');
@@ -1101,7 +1067,7 @@ function renderMusic(list) {
 function showPage(name) {
   // update nav
   document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-  const navMap = { home: 0, apprendre: 1, bibliotheque: 2, sorties: 3 };
+  const navMap = { home: 0, apprendre: 1, bibliotheque: 2 };
   const idx = navMap[name];
   if (idx !== undefined) document.querySelectorAll('.nav-links a')[idx].classList.add('active');
 
@@ -1119,9 +1085,36 @@ function showPage(name) {
   }
 }
 
+function goToInstrument(instrument) {
+  showPage('apprendre');
+  setInstrumentTab(instrument, document.querySelector(`.tab-btn[data-instrument="${instrument}"]`));
+  window.scrollTo(0, 0);
+}
+
 // ---- MODALS ----
-function openVideo(title, url, desc) {
-  openYoutubeVideo(url, title, desc);
+
+function esc(str) {
+  return String(str ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function bold(str) {
+  return str.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+}
+
+// Découpe le texte en lignes et marque celles qui sont dans un [refrain]...[/refrain].
+// Une ligne qui ne contient qu'une balise est retirée, pour garder les colonnes PT/FR alignées.
+function markRefrain(text) {
+  let inRefrain = false;
+  const result = [];
+  (text || '').split('\n').forEach(line => {
+    let isR = inRefrain;
+    if (line.includes('[refrain]')) { isR = true; inRefrain = true; }
+    if (line.includes('[/refrain]')) { isR = true; inRefrain = false; }
+    const clean = line.replace(/\[\/?refrain\]/g, '');
+    if (clean !== line && clean.trim() === '') return;
+    result.push({ text: clean, isRefrain: isR });
+  });
+  return result;
 }
 
 function openLyrics(id) {
@@ -1129,25 +1122,14 @@ function openLyrics(id) {
   if (!song) return;
   document.getElementById('lyrics-modal-title').textContent = song.title;
   if (song.translation) {
-    const markRefrain = (text) => {
-      const lines = text.split('\n');
-      let inRefrain = false;
-      return lines.map(line => {
-        let isR = inRefrain;
-        if (line.includes('[refrain]')) { isR = true; inRefrain = true; }
-        if (line.includes('[/refrain]')) { isR = true; inRefrain = false; }
-        const clean = line.replace(/\[\/?refrain\]/g, '');
-        return { text: clean, isRefrain: isR };
-      });
-    };
     const ptMarked = markRefrain(song.lyrics);
     const frMarked = markRefrain(song.translation);
     const maxLen = Math.max(ptMarked.length, frMarked.length);
     const rows = Array.from({length: maxLen}, (_, i) => {
       const ptObj = ptMarked[i] || { text: '', isRefrain: false };
       const frObj = frMarked[i] || { text: '', isRefrain: false };
-      const pt = ptObj.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      const fr = frObj.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      const pt = bold(esc(ptObj.text));
+      const fr = bold(esc(frObj.text));
       const refStyle = ptObj.isRefrain ? 'border-left:3px solid var(--yellow);background:var(--blue-pale);' : '';
       return `
         <tr>
@@ -1158,11 +1140,19 @@ function openLyrics(id) {
     document.getElementById('lyrics-modal-text').innerHTML = `<table style="width:100%;border-collapse:collapse;">${rows}</table>`;
     
   } else {
-    let formatted = song.lyrics
-      .replace(/\[refrain\]([\s\S]*?)\[\/refrain\]/g, '<div class="refrain-block">$1</div>')
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\n/g, '<br>');
-    document.getElementById('lyrics-modal-text').innerHTML = formatted;
+    let html = '';
+    let block = [];
+    const flush = () => {
+      if (block.length) html += `<div class="refrain-block">${block.join('<br>')}</div>`;
+      block = [];
+    };
+    markRefrain(song.lyrics).forEach(l => {
+      const line = bold(esc(l.text));
+      if (l.isRefrain) block.push(line);
+      else { flush(); html += line + '<br>'; }
+    });
+    flush();
+    document.getElementById('lyrics-modal-text').innerHTML = html;
   }
   
   const videoSection = document.getElementById('lyrics-modal-video');
@@ -1186,11 +1176,14 @@ function openLyrics(id) {
 }
 function closeModal(id) {
   document.getElementById(id).classList.remove('open');
+  // vider le player pour couper le son de la vidéo
+  if (id === 'lyrics-modal') document.getElementById('lyrics-modal-video').innerHTML = '';
 }
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
+    closeModal('lyrics-modal');
+    closeVideoModal();
   }
 });
 
@@ -1234,43 +1227,30 @@ function renderVideos() {
 
   let html = '';
 
-  if (baseVideos.length === 1) {
-    const v = baseVideos[0];
+  const baseCard = (v, style = '') => {
     const thumb = getThumb(v.youtube_url);
-    html += `
-    <div class="video-base-card" onclick="openYoutubeVideo('${v.youtube_url}', '${v.titre.replace(/'/g,"\\'")}', '${(v.description||'').replace(/'/g,"\\'")}')">
-      <div class="video-base-thumb">
-        ${thumb ? `<img src="${thumb}" alt="${v.titre}">` : ''}
-        <div class="video-play-overlay">
-          <svg width="22" height="22" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#00028e"/></svg>
-        </div>
-      </div>
-      <div class="video-base-info">
-        <div class="video-base-badge">Cours de base</div>
-        <h3>${v.titre}</h3>
-        <p>${v.description || ''}</p>
-      </div>
-    </div>`;
-  } else if (baseVideos.length > 1) {
-    html += `<div class="approfondissement-title">Cours de base</div>`;
-    html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem;">`;
-    baseVideos.forEach(v => {
-      const thumb = getThumb(v.youtube_url);
-      html += `
-      <div class="video-base-card" style="margin-bottom:0;" onclick="openYoutubeVideo('${v.youtube_url}', '${v.titre.replace(/'/g,"\\'")}', '${(v.description||'').replace(/'/g,"\\'")}')">
+    return `
+      <div class="video-base-card" style="${style}" onclick="openVideoById(${v.id})">
         <div class="video-base-thumb">
-          ${thumb ? `<img src="${thumb}" alt="${v.titre}">` : ''}
+          ${thumb ? `<img src="${thumb}" alt="${esc(v.titre)}">` : ''}
           <div class="video-play-overlay">
             <svg width="22" height="22" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#00028e"/></svg>
           </div>
         </div>
         <div class="video-base-info">
           <div class="video-base-badge">Cours de base</div>
-          <h3>${v.titre}</h3>
-          <p>${v.description || ''}</p>
+          <h3>${esc(v.titre)}</h3>
+          <p>${esc(v.description)}</p>
         </div>
       </div>`;
-    });
+  };
+
+  if (baseVideos.length === 1) {
+    html += baseCard(baseVideos[0]);
+  } else if (baseVideos.length > 1) {
+    html += `<div class="approfondissement-title">Cours de base</div>`;
+    html += `<div class="videos-base-grid">`;
+    baseVideos.forEach(v => { html += baseCard(v, 'margin-bottom:0;'); });
     html += `</div>`;
   }
 
@@ -1280,16 +1260,16 @@ function renderVideos() {
     approVideos.forEach(v => {
       const thumb = getThumb(v.youtube_url);
       html += `
-      <div class="video-card" onclick="openYoutubeVideo('${v.youtube_url}', '${v.titre.replace(/'/g,"\\'")}', '${(v.description||'').replace(/'/g,"\\'")}')">
+      <div class="video-card" onclick="openVideoById(${v.id})">
         <div class="video-card-thumb">
-          ${thumb ? `<img src="${thumb}" alt="${v.titre}">` : ''}
+          ${thumb ? `<img src="${thumb}" alt="${esc(v.titre)}">` : ''}
           <div class="mini-play">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#00028e"/></svg>
           </div>
         </div>
         <div class="video-card-body">
-          <strong>${v.titre}</strong>
-          <span>${v.description || ''}</span>
+          <strong>${esc(v.titre)}</strong>
+          <span>${esc(v.description)}</span>
         </div>
       </div>`;
     });
@@ -1301,6 +1281,11 @@ function renderVideos() {
   }
 
   container.innerHTML = html;
+}
+
+function openVideoById(id) {
+  const v = videos.find(v => v.id === id);
+  if (v) openYoutubeVideo(v.youtube_url, v.titre, v.description || '');
 }
 
 function openYoutubeVideo(url, title, desc) {
@@ -1354,27 +1339,35 @@ function downloadPDF(id) {
   let y = 52;
   const pageHeight = 275;
 
+  const drawRefrainBar = (top, bottom) => {
+    doc.setDrawColor(240, 192, 64);
+    doc.setLineWidth(1);
+    doc.line(16, top, 16, bottom);
+  };
+
   if (song.translation) {
-    const ptLines = song.lyrics.split('\n');
-    const frLines = song.translation.split('\n');
+    const ptMarked = markRefrain(song.lyrics);
+    const frMarked = markRefrain(song.translation);
 
-    const maxLen = Math.max(ptLines.length, frLines.length);
-    Array.from({length: maxLen}, (_, i) => ptLines[i] || '').forEach((ptLine, i) => {
-      const frLine = frLines[i] || '';
-      const ptText = ptLine.replace(/\*\*(.*?)\*\*/g, '$1');
-      const frText = frLine.replace(/\*\*(.*?)\*\*/g, '$1');
-
-      if (y > pageHeight) { doc.addPage(); y = 20; }
+    const maxLen = Math.max(ptMarked.length, frMarked.length);
+    Array.from({length: maxLen}, (_, i) => {
+      const ptObj = ptMarked[i] || { text: '', isRefrain: false };
+      const frObj = frMarked[i] || { text: '', isRefrain: false };
+      const ptText = ptObj.text.replace(/\*\*(.*?)\*\*/g, '$1');
+      const frText = frObj.text.replace(/\*\*(.*?)\*\*/g, '$1');
 
       const colWidth = 80;
       const ptLines2 = doc.splitTextToSize(ptText, colWidth);
       const frLines2 = doc.splitTextToSize(frText, colWidth);
       const maxLines = Math.max(ptLines2.length, frLines2.length);
 
+      if (y + maxLines * 6 > pageHeight) { doc.addPage(); y = 20; }
+
+      if (ptObj.isRefrain) drawRefrainBar(y - 4, y + maxLines * 6 - 2);
+
+      doc.setFont('helvetica', ptObj.text.trim().startsWith('**') ? 'bold' : 'normal');
+      doc.setTextColor(30, 30, 30);
       ptLines2.forEach((line, j) => {
-        if (y + (j * 6) > pageHeight) { doc.addPage(); y = 20; }
-        doc.setFont('helvetica', ptLine.startsWith('**') ? 'bold' : 'normal');
-        doc.setTextColor(30, 30, 30);
         doc.text(line, 20, y + (j * 6));
       });
 
@@ -1391,21 +1384,18 @@ function downloadPDF(id) {
       y += maxLines * 6 + 2;
     });
   } else {
-    const segments = song.lyrics.split(/(\*\*.*?\*\*)/g);
-    segments.forEach(segment => {
-      if (!segment || segment.trim() === '') return;
-      const isBold = segment.startsWith('**') && segment.endsWith('**');
-      const text = isBold ? segment.slice(2, -2) : segment;
-      if (!text.trim()) return;
-      doc.setFont('helvetica', isBold ? 'bold' : 'normal');
+    markRefrain(song.lyrics).forEach(l => {
+      const text = l.text.replace(/\*\*(.*?)\*\*/g, '$1');
+      doc.setFont('helvetica', l.text.trim().startsWith('**') ? 'bold' : 'normal');
       doc.setFontSize(12);
       doc.setTextColor(30, 30, 30);
-      const lines = doc.splitTextToSize(text, 170);
-      lines.forEach(line => {
-        if (y > pageHeight) { doc.addPage(); y = 20; }
-        doc.text(line, 20, y);
-        y += 7;
+      const lines = text.trim() ? doc.splitTextToSize(text, 170) : [''];
+      if (y + lines.length * 7 > pageHeight) { doc.addPage(); y = 20; }
+      if (l.isRefrain) drawRefrainBar(y - 5, y + lines.length * 7 - 5);
+      lines.forEach((line, j) => {
+        if (line) doc.text(line, 20, y + (j * 7));
       });
+      y += lines.length * 7;
     });
   }
 
