@@ -241,7 +241,6 @@
   .tag-angola { background: #fff3e0; color: #bf5100; }
   .tag-regional { background: #e3f2fd; color: #0d47a1; }
   .tag-ladainha { background: #e8f5e9; color: #1b5e20; }
-  .tag-past { background: #eee; color: #888; }
 
   .btn-edit {
     background: none;
@@ -384,36 +383,6 @@
         <div class="form-error" id="p-form-error"></div>
       </div>
       <div class="photos-grid" id="photos-list">
-        <div class="empty">Chargement...</div>
-      </div>
-
-      <div class="separator"></div>
-
-      <div class="section-title">Annonces</div>
-      <div class="form-card">
-        <h2>Nouvelle annonce</h2>
-        <p class="form-hint">Une annonce avec une date disparaît de l'accueil le lendemain. Sans date, elle reste jusqu'à ce que tu la supprimes.</p>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Titre</label>
-            <input type="text" id="a-titre" placeholder="Ex: Roda de fin d'année">
-          </div>
-          <div class="form-group">
-            <label>Date (optionnel)</label>
-            <input type="date" id="a-date">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group full">
-            <label>Texte (optionnel)</label>
-            <textarea id="a-texte" style="min-height:90px;" placeholder="Lieu, horaire, ce qu'il faut apporter..."></textarea>
-          </div>
-        </div>
-        <button class="btn-submit" id="a-submit-btn" onclick="addAnnonce()">Publier l'annonce</button>
-        <div class="form-success" id="a-form-success">✓ Annonce publiée !</div>
-        <div class="form-error" id="a-form-error"></div>
-      </div>
-      <div class="songs-list" id="annonces-list">
         <div class="empty">Chargement...</div>
       </div>
 
@@ -639,7 +608,6 @@
     document.getElementById('admin-screen').style.display = 'block';
     document.getElementById('nav-user').textContent = session.user.email;
     loadPhotos();
-    loadAnnonces();
     loadPresentation();
     loadSongs();
     loadVideos();
@@ -800,63 +768,6 @@
     if (writeFailed(error, data)) return;
     if (path) await db.storage.from('photos').remove([path]);
     document.getElementById('prow-' + id).remove();
-  }
-
-  // ---- ANNONCES ----
-  async function loadAnnonces() {
-    const { data, error } = await db.from('annonces').select('*')
-      .order('date_evenement', { ascending: false, nullsFirst: true });
-    const list = document.getElementById('annonces-list');
-    if (error) { list.innerHTML = `<div class="empty">Erreur : ${esc(error.message)}</div>`; return; }
-    if (!data.length) { list.innerHTML = '<div class="empty">Aucune annonce pour l\'instant.</div>'; return; }
-    const d = new Date();
-    const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-    list.innerHTML = data.map(a => {
-      const past = a.date_evenement && a.date_evenement < today;
-      const dateLabel = a.date_evenement
-        ? new Date(a.date_evenement + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
-        : 'Sans date';
-      return `
-      <div class="song-row" id="arow-${a.id}">
-        <div class="song-row-info">
-          <strong>${esc(a.titre)}</strong>
-          <span>${dateLabel}</span>
-        </div>
-        ${past ? '<span class="genre-tag tag-past">Passée</span>' : ''}
-        <button class="btn-delete" onclick="deleteAnnonce(${a.id})">Supprimer</button>
-      </div>`;
-    }).join('');
-  }
-
-  async function addAnnonce() {
-    const titre = document.getElementById('a-titre').value.trim();
-    const date_evenement = document.getElementById('a-date').value || null;
-    const texte = document.getElementById('a-texte').value.trim();
-    const successEl = document.getElementById('a-form-success');
-    const errorEl = document.getElementById('a-form-error');
-    const btn = document.getElementById('a-submit-btn');
-    successEl.style.display = 'none';
-    errorEl.style.display = 'none';
-
-    if (!titre) { showMsg(errorEl, 'Le titre est obligatoire.'); return; }
-
-    btn.disabled = true;
-    const { error } = await db.from('annonces').insert([{ titre, date_evenement, texte: texte || null }]);
-    btn.disabled = false;
-    if (error) { showMsg(errorEl, 'Erreur : ' + error.message); return; }
-
-    showMsg(successEl);
-    document.getElementById('a-titre').value = '';
-    document.getElementById('a-date').value = '';
-    document.getElementById('a-texte').value = '';
-    loadAnnonces();
-  }
-
-  async function deleteAnnonce(id) {
-    if (!confirm('Supprimer cette annonce ?')) return;
-    const { data, error } = await db.from('annonces').delete().eq('id', id).select('id');
-    if (writeFailed(error, data)) return;
-    document.getElementById('arow-' + id).remove();
   }
 
   // ---- PRÉSENTATION ----

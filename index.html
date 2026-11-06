@@ -312,31 +312,6 @@
     .hero-slide, .hero-slide.active { transform: none; transition: opacity 0.3s; }
   }
 
-  .annonces-list { display: flex; flex-direction: column; gap: 0.75rem; }
-  .annonce {
-    display: flex;
-    gap: 1.25rem;
-    align-items: flex-start;
-    background: var(--white);
-    border: 1px solid #e5e5e5;
-    border-left: 4px solid var(--yellow);
-    border-radius: var(--radius);
-    padding: 1rem 1.25rem;
-  }
-  .annonce-date {
-    background: var(--blue);
-    color: var(--white);
-    border-radius: 8px;
-    min-width: 58px;
-    padding: 0.4rem 0.5rem;
-    text-align: center;
-    flex-shrink: 0;
-  }
-  .annonce-date strong { display: block; font-family: 'Bebas Neue', cursive; font-size: 1.7rem; line-height: 1; color: var(--yellow); }
-  .annonce-date span { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; }
-  .annonce h4 { font-size: 1rem; margin-bottom: 0.2rem; }
-  .annonce-when { font-size: 0.8rem; color: var(--blue-light); font-weight: 600; margin-bottom: 0.35rem; }
-  .annonce p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
 
   .home-grid {
     display: grid;
@@ -448,7 +423,7 @@
   .video-embed a:hover { text-decoration: underline; }
   .video-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
 
-  /* BIBLIOTHÈQUE */
+  /* CHANTS */
   .library-controls {
     display: flex;
     align-items: center;
@@ -805,7 +780,7 @@
   <ul class="nav-links" id="nav-links">
     <li><a href="#" class="active" onclick="showPage('home');closeMenu();return false;">Accueil</a></li>
     <li><a href="#" onclick="showPage('apprendre');closeMenu();return false;">Apprendre</a></li>
-    <li><a href="#" onclick="showPage('bibliotheque');closeMenu();return false;">Bibliothèque</a></li>
+    <li><a href="#" onclick="showPage('bibliotheque');closeMenu();return false;">Chants</a></li>
   </ul>
   <button class="hamburger" id="hamburger" onclick="toggleMenu()">
     <span></span>
@@ -822,10 +797,10 @@
   <div class="hero-dots" id="hero-dots"></div>
   <div class="hero-text">
     <h1>Musiques de<br><span>Capoeira</span></h1>
-    <p>Apprends les rythmes du berimbau, de l'atabaque et du pandeiro. Explore notre bibliothèque de chants et Chante !</p>
+    <p>Apprends les rythmes du berimbau, de l'atabaque et du pandeiro. Révise les chants avec leurs paroles et leur traduction, et chante !</p>
     <div class="hero-cta">
       <a href="#" class="btn-primary" onclick="showPage('apprendre');return false;">Commencer à apprendre</a>
-      <a href="#" class="btn-outline" onclick="showPage('bibliotheque');return false;">Voir la bibliothèque</a>
+      <a href="#" class="btn-outline" onclick="showPage('bibliotheque');return false;">Voir les chants</a>
     </div>
   </div>
   <div class="hero-mascot">
@@ -846,13 +821,6 @@
 
 <!-- SECTION HOME CONTENT -->
 <div id="home-content">
-
-  <!-- ANNONCES -->
-  <div class="section" id="annonces-section" style="display:none;">
-    <h2 class="section-title">Prochainement</h2>
-    <p class="section-subtitle">Événements et infos du groupe</p>
-    <div class="annonces-list" id="annonces-list"></div>
-  </div>
 
   <!-- LE GROUPE + CHANT DU JOUR -->
   <div class="section">
@@ -903,11 +871,11 @@
   </div>
 </div>
 
-<!-- PAGE: BIBLIOTHÈQUE -->
+<!-- PAGE: CHANTS -->
 <div class="page" id="page-bibliotheque">
   <div class="section">
-    <h2 class="section-title">Bibliothèque musicale</h2>
-    <p class="section-subtitle">Chants, paroles et audios – filtre par genre</p>
+    <h2 class="section-title">Chants</h2>
+    <p class="section-subtitle">Paroles, traductions et vidéos – filtre par genre</p>
 
     <div class="library-controls">
       <input type="text" class="search-bar" id="search-input" placeholder="Rechercher un chant..." oninput="filterMusic()">
@@ -1467,34 +1435,6 @@ function carouselGo(i) {
   if (count > 1 && !reduceMotion) carouselTimer = setTimeout(() => carouselGo(carouselIndex + 1), 6000);
 }
 
-// Annonces : celles sans date, et celles dont la date n'est pas passée
-async function loadAnnonces() {
-  const { data, error } = await db
-    .from('annonces')
-    .select('*')
-    .or(`date_evenement.gte.${todayISO()},date_evenement.is.null`)
-    .order('date_evenement', { ascending: true, nullsFirst: true });
-  if (error) { console.error('Erreur chargement annonces:', error); return; }
-  if (!data.length) return;
-  document.getElementById('annonces-list').innerHTML = data.map(a => {
-    const d = a.date_evenement ? new Date(a.date_evenement + 'T00:00:00') : null;
-    const badge = d
-      ? `<strong>${d.getDate()}</strong><span>${d.toLocaleDateString('fr-FR', { month: 'short' })}</span>`
-      : `<strong>!</strong><span>Info</span>`;
-    const when = d ? `<div class="annonce-when">${d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</div>` : '';
-    return `
-    <div class="annonce">
-      <div class="annonce-date">${badge}</div>
-      <div>
-        <h4>${esc(a.titre)}</h4>
-        ${when}
-        ${a.texte ? `<p>${formatText(a.texte)}</p>` : ''}
-      </div>
-    </div>`;
-  }).join('');
-  document.getElementById('annonces-section').style.display = '';
-}
-
 // Présentation du groupe
 async function loadClubInfo() {
   const { data, error } = await db.from('club_info').select('*');
@@ -1537,7 +1477,6 @@ showPage('home');
 loadSongs();
 loadVideos();
 loadPhotos();
-loadAnnonces();
 loadClubInfo();
 </script>
 </body>
