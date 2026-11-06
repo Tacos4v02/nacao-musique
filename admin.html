@@ -388,6 +388,22 @@
 
       <div class="separator"></div>
 
+      <div class="section-title">Chant du mois</div>
+      <div class="form-card">
+        <h2>Choisir le chant du mois</h2>
+        <p class="form-hint">Affiché sur l'accueil à côté de la présentation, avec le début des paroles et un bouton pour les ouvrir. Choisis « Aucun » pour masquer le bloc.</p>
+        <div class="form-row">
+          <div class="form-group full">
+            <select id="m-chant"><option value="">Chargement...</option></select>
+          </div>
+        </div>
+        <button class="btn-submit" id="m-submit-btn" onclick="saveChantDuMois()">Sauvegarder</button>
+        <div class="form-success" id="m-form-success">✓ Chant du mois enregistré !</div>
+        <div class="form-error" id="m-form-error"></div>
+      </div>
+
+      <div class="separator"></div>
+
       <div class="section-title">Présentation du groupe</div>
       <div class="form-card">
         <h2>Texte de présentation</h2>
@@ -770,6 +786,36 @@
     document.getElementById('prow-' + id).remove();
   }
 
+  // ---- CHANT DU MOIS ----
+  // stocké dans club_info (clé "chant_du_mois" = id du chant)
+  async function loadChantDuMois() {
+    const [songsRes, infoRes] = await Promise.all([
+      db.from('songs').select('id, title').order('title', { ascending: true }),
+      db.from('club_info').select('value').eq('key', 'chant_du_mois').maybeSingle(),
+    ]);
+    const select = document.getElementById('m-chant');
+    const current = (infoRes.data && infoRes.data.value) || '';
+    select.innerHTML = '<option value="">Aucun</option>' + (songsRes.data || []).map(s =>
+      `<option value="${s.id}">${esc(s.title)}</option>`).join('');
+    select.value = current;
+    // chant supprimé entre-temps : on revient sur "Aucun"
+    if (select.value !== current) select.value = '';
+  }
+
+  async function saveChantDuMois() {
+    const value = document.getElementById('m-chant').value;
+    const successEl = document.getElementById('m-form-success');
+    const errorEl = document.getElementById('m-form-error');
+    const btn = document.getElementById('m-submit-btn');
+    successEl.style.display = 'none';
+    errorEl.style.display = 'none';
+    btn.disabled = true;
+    const { error } = await db.from('club_info').upsert({ key: 'chant_du_mois', value });
+    btn.disabled = false;
+    if (error) { showMsg(errorEl, 'Erreur : ' + error.message); return; }
+    showMsg(successEl);
+  }
+
   // ---- PRÉSENTATION ----
   async function loadPresentation() {
     const { data } = await db.from('club_info').select('value').eq('key', 'presentation').maybeSingle();
@@ -869,6 +915,7 @@
   let allSongs = [];
 
   async function loadSongs() {
+    loadChantDuMois();  // garde la liste du chant du mois à jour après un ajout, une modif ou une suppression
     const { data, error } = await db
       .from('songs')
       .select('*')
@@ -998,6 +1045,7 @@
     const { data, error } = await db.from('songs').delete().eq('id', id).select('id');
     if (writeFailed(error, data)) return;
     document.getElementById('row-' + id).remove();
+    loadChantDuMois();
   }
 
   // Reste connecté entre deux visites

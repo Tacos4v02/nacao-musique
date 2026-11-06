@@ -321,16 +321,16 @@
   }
   .home-grid.single { grid-template-columns: 1fr; }
   .presentation-text { line-height: 1.7; padding-left: 1.25rem; }
-  .chant-du-jour {
+  .chant-du-mois {
     background: var(--blue);
     color: var(--white);
     border-radius: var(--radius);
     padding: 1.5rem;
   }
-  .chant-du-jour .video-base-badge { margin-bottom: 0.75rem; }
-  .chant-du-jour h3 { font-family: 'Bebas Neue', cursive; font-size: 1.8rem; letter-spacing: 1px; line-height: 1.1; }
-  .chant-du-jour .music-meta { color: rgba(255,255,255,0.7); margin: 0.25rem 0 0.75rem; }
-  .chant-du-jour blockquote {
+  .chant-du-mois .video-base-badge { margin-bottom: 0.75rem; }
+  .chant-du-mois h3 { font-family: 'Bebas Neue', cursive; font-size: 1.8rem; letter-spacing: 1px; line-height: 1.1; }
+  .chant-du-mois .music-meta { color: rgba(255,255,255,0.7); margin: 0.25rem 0 0.75rem; }
+  .chant-du-mois blockquote {
     border-left: 3px solid var(--yellow);
     padding-left: 0.85rem;
     font-style: italic;
@@ -829,7 +829,7 @@
         <h2 class="section-title">Le groupe</h2>
         <div class="presentation-text" id="presentation-text"></div>
       </div>
-      <div class="chant-du-jour" id="chant-du-jour" style="display:none;"></div>
+      <div class="chant-du-mois" id="chant-du-mois" style="display:none;"></div>
     </div>
   </div>
 
@@ -959,7 +959,7 @@ async function loadSongs() {
     videoUrl: s.video_url
   }));
   filterMusic();
-  renderChantDuJour();
+  renderChantDuMois();
 }
 
 // localStorage peut être bloqué (navigation privée...) : on ne doit pas planter le site
@@ -1389,11 +1389,6 @@ function formatText(str) {
   return bold(esc(str)).replace(/\n/g, '<br>');
 }
 
-function todayISO() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-}
-
 // Carrousel : les photos défilent en fondu dans le fond du bandeau bleu
 let carouselIndex = 0;
 let carouselPhotos = [];
@@ -1435,30 +1430,33 @@ function carouselGo(i) {
   if (count > 1 && !reduceMotion) carouselTimer = setTimeout(() => carouselGo(carouselIndex + 1), 6000);
 }
 
-// Présentation du groupe
+// Présentation du groupe et chant du mois (table club_info)
+let chantDuMoisId = null;
+
 async function loadClubInfo() {
   const { data, error } = await db.from('club_info').select('*');
   if (error) { console.error('Erreur chargement infos club:', error); return; }
   const info = Object.fromEntries(data.map(r => [r.key, r.value]));
+  chantDuMoisId = Number(info.chant_du_mois) || null;
+  renderChantDuMois();
   if (!info.presentation || !info.presentation.trim()) return;
   document.getElementById('presentation-text').innerHTML = formatText(info.presentation);
   document.getElementById('presentation-block').style.display = '';
   updateHomeGrid();
 }
 
-// Chant du jour : le même pour tout le monde pendant la journée
-function renderChantDuJour() {
-  const el = document.getElementById('chant-du-jour');
-  if (!songs.length) return;
-  let h = 0;
-  for (const c of todayISO()) h = (h * 31 + c.charCodeAt(0)) >>> 0;
-  const s = songs[h % songs.length];
+// Chant du mois : choisi dans l'admin. Appelé après le chargement des chants
+// et après celui de club_info, puisque les deux arrivent dans un ordre quelconque.
+function renderChantDuMois() {
+  const el = document.getElementById('chant-du-mois');
+  const s = songs.find(s => s.id === chantDuMoisId);
+  if (!s) return;
   const tagClass = { angola: 'tag-angola', regional: 'tag-regional', ladainha: 'tag-ladainha' }[s.genre];
   const tagLabel = { angola: 'Angola', regional: 'Regional', ladainha: 'Ladainha' }[s.genre];
   const preview = markRefrain(s.lyrics).filter(l => l.text.trim()).slice(0, 4)
     .map(l => esc(l.text.replace(/\*\*(.*?)\*\*/g, '$1'))).join('<br>');
   el.innerHTML = `
-    <div class="video-base-badge">Chant du jour</div>
+    <div class="video-base-badge">Chant du mois</div>
     <h3>${esc(s.title)}</h3>
     <div class="music-meta"><span class="genre-tag ${tagClass}">${tagLabel}</span> ${esc(s.meta)}</div>
     ${preview ? `<blockquote>${preview}…</blockquote>` : ''}
@@ -1469,7 +1467,7 @@ function renderChantDuJour() {
 
 function updateHomeGrid() {
   const both = document.getElementById('presentation-block').style.display !== 'none'
-    && document.getElementById('chant-du-jour').style.display !== 'none';
+    && document.getElementById('chant-du-mois').style.display !== 'none';
   document.getElementById('home-grid').classList.toggle('single', !both);
 }
 
